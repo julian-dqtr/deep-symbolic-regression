@@ -1,3 +1,5 @@
+import math
+
 CONFIG = {
     #  Environment Parameters 
     "max_length": 30,          # Maximum length of the generated expression
@@ -16,3 +18,28 @@ CONFIG = {
     "num_episodes": 10000,     # Total number of training loops
     "batch_size": 256,         # Number of expressions generated before updating weights
 }
+
+# Dictionary of physical and mathematical constants 
+# These will be automatically converted to PyTorch tensors during evaluation
+CONSTANTS = {
+    "pi": math.pi,
+    "e": math.e,
+    "g": 9.81,            # Gravity (Earth)
+    "c": 299792458.0,     # Speed of light
+    "G": 6.67430e-11,     # Gravitational constant
+    "h": 6.62607015e-34,  # Planck constant
+    "k": 1.380649e-23     # Boltzmann constant
+}
+
+# The official vocabulary for the RL agent (Action Space)
+# The agent's neural network will output probabilities over this exact list
+ACTION_SPACE = [
+    # Basic math operators
+    "+", "-", "*", "/", "**",
+    # Functions
+    "sin", "cos", "exp", "log", "sqrt", "abs",
+    # Physical and math constants
+    "pi", "e", "g", "c", "G", "h", "k",
+    # Variables (will be dynamically expanded based on the dataset)
+    "x0", "x1", "x2", "x3"
+]
