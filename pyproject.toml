@@ -1,7 +1,7 @@
 [project]
 name = "deep-symbolic-regression"
 version = "0.1.0"
-description = "Add your description here"
+description = "Deep Symbolic Regression with Reinforcement Learning"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -11,4 +11,5 @@ dependencies = [
     "pandas>=3.0.1",
     "seaborn>=0.13.2",
     "torch>=2.10.0",
+    "optuna"
 ]
