@@ -45,7 +45,7 @@ class Evaluator:
             return torch_func
             
         except Exception as e:
-            print(f"Conversion error in tokens_to_function: {e}")
+            # print(f"Conversion error in tokens_to_function: {e}")
             return None
 
     def calculate_nmse(self, y_true, y_pred):
