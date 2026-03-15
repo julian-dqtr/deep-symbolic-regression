@@ -163,6 +163,7 @@ dependencies = [
     { name = "optuna" },
     { name = "pandas" },
     { name = "seaborn" },
+    { name = "sympy" },
     { name = "torch" },
 ]
 
@@ -174,6 +175,7 @@ requires-dist = [
     { name = "optuna" },
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "sympy", specifier = ">=1.14.0" },
     { name = "torch", specifier = ">=2.10.0" },
 ]
 
