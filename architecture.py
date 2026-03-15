@@ -48,7 +48,7 @@ class PolicyNetwork(nn.Module):
         super(PolicyNetwork, self).__init__()
         self.embedding = nn.Embedding(vocab_size, CONFIG["embedding_dim"])
         
-        # Switched from GRU to LSTM
+        # LSTM
         self.lstm = nn.LSTM(
             input_size=CONFIG["embedding_dim"], 
             hidden_size=CONFIG["hidden_dim"], 
