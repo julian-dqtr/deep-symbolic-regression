@@ -103,7 +103,7 @@ class Evaluator:
             }
             
         except Exception as e:
-            print(f"Execution error in evaluate_episode: {e}")
+            # print(f"Execution error in evaluate_episode: {e}")
             return {
                 "is_valid": False,
                 "nmse": torch.tensor(1.0, device=self.device),
