@@ -43,7 +43,7 @@ class SymbolicEnv:
             "x0": 0, "x1": 0, "x2": 0, "x3": 0, "<EOS>": 0
         }
         
-        # On passe input_dim = colonnes de X + 1 (pour Y)
+
         self.encoder = DeepSetsEncoder(input_dim=dataset_x.shape[1] + 1)
         self.reset()
 
@@ -60,7 +60,7 @@ class SymbolicEnv:
         token = self.action_space[action_idx]
         self.current_expression.append(token)
         
-        # Condition de fin : soit le jeton <EOS>, soit longueur max
+
         done = (token == "<EOS>") or (len(self.current_expression) >= self.max_length)
         
         reward = 0
