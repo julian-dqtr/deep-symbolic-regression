@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-from ..config import TRAINING_CONFIG
+from ..core.config import TRAINING_CONFIG
 from ..core.factory import build_grammar
 from ..core.env import SymbolicRegressionEnv
 from ..core.expression import safe_prefix_to_infix

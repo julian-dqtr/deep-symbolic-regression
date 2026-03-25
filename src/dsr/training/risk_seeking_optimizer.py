@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-from ..config import TRAINING_CONFIG
+from ..core.config import TRAINING_CONFIG
 
 class RiskSeekingOptimizer:
     def __init__(self, policy, epsilon=0.05):

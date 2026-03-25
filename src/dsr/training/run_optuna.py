@@ -2,8 +2,8 @@ import optuna
 import numpy as np
 import torch
 
-from ..benchmarks.datasets import get_task_by_name
-from ..training.trainer import Trainer
+from ..data.datasets import get_task_by_name
+from .trainer import Trainer
 from ..core.evaluator import PrefixEvaluator
 
 def objective(trial):
@@ -15,13 +15,10 @@ def objective(trial):
     num_episodes = 5000 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
-    # We test on 4 equations of varying difficulty
-    # Easy: nguyen_x_plus_1 (equivalent to polynomial)
     # Medium: feynman_I_8_14 (distance, velocity)
     # Hard: feynman_I_10_7 (mass, velocity, etc.)
     # Very Hard: feynman_I_12_1 (force components)
     tasks_to_test = [
-        "nguyen_x_plus_1",
         "feynman_I_8_14", 
         "feynman_I_10_7",
         "feynman_I_12_1"

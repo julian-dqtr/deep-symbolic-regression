@@ -1,7 +1,14 @@
 import os
+import sys
 import ast
 import glob
 import pandas as pd
+
+# Allow absolute imports from project root independently of cwd
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+sys.path.append(project_root)
+
 from src.dsr.analysis.visualizer import ASTVisualizer
 from src.dsr.core.factory import build_grammar
 
@@ -29,7 +36,8 @@ def ast_to_prefix(node):
 
 def main():
     # Load newest CSV
-    list_of_files = glob.glob("results_pmlb_*.csv")
+    search_pattern = os.path.join(script_dir, "results_*.csv")
+    list_of_files = glob.glob(search_pattern)
     if not list_of_files:
         print("No results CSV found.")
         return
@@ -74,10 +82,10 @@ def main():
         tokens, 
         grammar, 
         title=f"{task_name} (NMSE: {nmse:.1e})\n{expr_str}", 
-        filename="best_equation.png", 
+        filename=os.path.join(script_dir, "best_equation.png"), 
         show=True
     )
-    print("Saved visualization to best_equation.png")
+    print("Saved visualization to results/best_equation.png")
 
 if __name__ == "__main__":
     main()

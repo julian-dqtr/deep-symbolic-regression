@@ -6,12 +6,10 @@ import random
 import csv
 from datetime import datetime
 
-from ..benchmarks.datasets import get_task_suite
-from ..training.trainer import Trainer
+from ..data.datasets import get_task_suite
+from .trainer import Trainer
 from ..core.evaluator import PrefixEvaluator
 from ..core.expression import safe_prefix_to_infix
-from ..baselines.beam_search import beam_search
-from ..scripts.decode_with_beam import evaluate_beam_candidates, sort_candidates_by_reward
 
 def set_seed(seed: int = 42):
     random.seed(seed)
@@ -31,7 +29,8 @@ def train_on_suite(suite_name: str, args):
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
-    results_file = f"results_{suite_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    os.makedirs("results", exist_ok=True)
+    results_file = f"results/results_{suite_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     with open(results_file, mode='w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -138,7 +137,7 @@ def train_on_suite(suite_name: str, args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", type=str, default="pmlb_feynman_all", choices=["pmlb_feynman_all", "pmlb_feynman_subset", "pmlb_nguyen_subset", "feynman", "nguyen", "toy"])
+    parser.add_argument("--suite", type=str, default="pmlb_feynman_all", choices=["pmlb_feynman_all", "pmlb_feynman_subset"])
     parser.add_argument("--num_episodes", type=int, default=20000)
     parser.add_argument("--num_samples", type=int, default=100)
     parser.add_argument("--learning_rate", type=float, default=0.000335)

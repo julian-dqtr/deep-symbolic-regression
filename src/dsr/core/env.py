@@ -4,7 +4,7 @@ import numpy as np
 
 from .grammar import Grammar
 from .evaluator import PrefixEvaluator
-from ..config import ENV_CONFIG
+from .config import ENV_CONFIG
 
 
 @dataclass

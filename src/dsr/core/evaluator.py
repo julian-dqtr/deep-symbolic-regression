@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..config import ENV_CONFIG
+from .config import ENV_CONFIG
 from .grammar import Grammar
 
 

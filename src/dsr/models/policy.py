@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from ..config import MODEL_CONFIG
+from ..core.config import MODEL_CONFIG
 
 
 class DeepSetsEncoder(nn.Module):

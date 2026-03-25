@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.distributions import Categorical
 
-from ..config import TRAINING_CONFIG
+from ..core.config import TRAINING_CONFIG
 
 
 class PPOOptimizer:
