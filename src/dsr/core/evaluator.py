@@ -9,61 +9,58 @@ class PrefixEvaluator:
         self.grammar = grammar
         self.eps = ENV_CONFIG["numeric_epsilon"]
 
-    def evaluate(self, tokens, X, y):
-        """
-        Evaluate a prefix expression on dataset X and compare with target y.
-
-        Args:
-            tokens (list[str]): Prefix expression tokens.
-            X (np.ndarray): Shape (n_samples, n_features)
-            y (np.ndarray): Shape (n_samples,)
-
-        Returns:
-            dict with keys:
-                - is_valid (bool)
-                - nmse (float)
-                - complexity (int)
-        """
+    def evaluate(self, tokens, X, y, optimize_constants=True):
         complexity = len(tokens)
+        num_consts = tokens.count("const")
 
-        try:
-            y_pred = self._eval_prefix(tokens, X)
+        if optimize_constants and num_consts > 0:
+            def loss_fn(C):
+                try:
+                    y_pred = self._eval_prefix(tokens, X, C=C)
+                    if not isinstance(y_pred, np.ndarray) or y_pred.shape != y.shape or not np.all(np.isfinite(y_pred)):
+                        return 1e9
+                    mse = np.mean((y - y_pred) ** 2)
+                    var_y = np.var(y)
+                    return float(mse / var_y) if var_y > self.eps else float(mse)
+                except Exception:
+                    return 1e9
 
-            if not isinstance(y_pred, np.ndarray):
+            try:
+                import scipy.optimize
+                import warnings
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    res = scipy.optimize.minimize(loss_fn, x0=np.ones(num_consts), method="BFGS", options={"maxiter": 10})
+                
+                best_C = res.x
+                y_pred = self._eval_prefix(tokens, X, C=best_C)
+                if not isinstance(y_pred, np.ndarray) or y_pred.shape != y.shape or not np.all(np.isfinite(y_pred)):
+                    return {"is_valid": False, "nmse": 1.0, "complexity": complexity, "optimized_constants": []}
+                
+                nmse = self._calculate_nmse(y, y_pred)
                 return {
-                    "is_valid": False,
-                    "nmse": 1.0,
+                    "is_valid": True,
+                    "nmse": float(min(nmse, 1.0)),
                     "complexity": complexity,
+                    "optimized_constants": best_C.tolist()
                 }
-
-            if y_pred.shape != y.shape:
+            except Exception:
+                return {"is_valid": False, "nmse": 1.0, "complexity": complexity, "optimized_constants": []}
+        else:
+            try:
+                y_pred = self._eval_prefix(tokens, X)
+                if not isinstance(y_pred, np.ndarray) or y_pred.shape != y.shape or not np.all(np.isfinite(y_pred)):
+                    return {"is_valid": False, "nmse": 1.0, "complexity": complexity, "optimized_constants": []}
+                
+                nmse = self._calculate_nmse(y, y_pred)
                 return {
-                    "is_valid": False,
-                    "nmse": 1.0,
+                    "is_valid": True,
+                    "nmse": float(min(nmse, 1.0)),
                     "complexity": complexity,
+                    "optimized_constants": []
                 }
-
-            if not np.all(np.isfinite(y_pred)):
-                return {
-                    "is_valid": False,
-                    "nmse": 1.0,
-                    "complexity": complexity,
-                }
-
-            nmse = self._calculate_nmse(y, y_pred)
-
-            return {
-                "is_valid": True,
-                "nmse": float(min(nmse, 1.0)),
-                "complexity": complexity,
-            }
-
-        except Exception:
-            return {
-                "is_valid": False,
-                "nmse": 1.0,
-                "complexity": complexity,
-            }
+            except Exception:
+                return {"is_valid": False, "nmse": 1.0, "complexity": complexity, "optimized_constants": []}
 
     def _calculate_nmse(self, y_true, y_pred):
         mse = np.mean((y_true - y_pred) ** 2)
@@ -74,14 +71,20 @@ class PrefixEvaluator:
 
         return float(mse / var_true)
 
-    def _eval_prefix(self, tokens, X):
+    def _eval_prefix(self, tokens, X, C=None):
         stack = []
+        num_consts = tokens.count("const")
+        c_idx = num_consts - 1
 
         for token in reversed(tokens):
             arity = self.grammar.arity[token]
 
             if arity == 0:
-                stack.append(self._terminal_value(token, X))
+                if token == "const" and C is not None:
+                    stack.append(np.full(X.shape[0], C[c_idx], dtype=np.float32))
+                    c_idx -= 1
+                else:
+                    stack.append(self._terminal_value(token, X))
 
             elif arity == 1:
                 if len(stack) < 1:

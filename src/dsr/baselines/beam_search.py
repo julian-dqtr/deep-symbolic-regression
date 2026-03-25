@@ -142,9 +142,7 @@ def beam_search(
             break
 
         def beam_score(b):
-            completion_bonus = 1.0 if b["complete"] else 0.0
-            length_penalty = 0.01 * len(b["tokens"])
-            return b["logprob"] + completion_bonus - length_penalty
+            return b["logprob"]
 
         new_beams = sorted(new_beams, key=beam_score, reverse=True)[:beam_width]
         beams = new_beams
@@ -157,7 +155,7 @@ def beam_search(
 
     final_candidates = sorted(
         final_candidates,
-        key=lambda b: (b["complete"], b["logprob"] - 0.01 * len(b["tokens"])),
+        key=lambda b: (b["complete"], b["logprob"]),
         reverse=True,
     )
 

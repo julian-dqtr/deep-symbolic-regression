@@ -62,7 +62,7 @@ def evaluate_beam_candidates(grammar, X, y, candidates):
 
         enriched = {
             "tokens": tokens,
-            "infix": cand["infix"],
+            "infix": safe_prefix_to_infix(tokens, grammar, eval_result.get("optimized_constants", [])),
             "logprob": cand["logprob"],
             "complete": cand["complete"],
             "pending_slots": cand["pending_slots"],
@@ -176,8 +176,8 @@ def run_decode_with_beam(
 
     if best_episode is not None:
         best_tokens = best_episode["tokens"]
-        best_expr = safe_prefix_to_infix(best_tokens, grammar)
         best_eval = evaluator.evaluate(best_tokens, X, y)
+        best_expr = safe_prefix_to_infix(best_tokens, grammar, best_eval.get("optimized_constants", []))
         best_reward = train_results["best_reward"]
 
         print(f"Tokens: {best_tokens}")

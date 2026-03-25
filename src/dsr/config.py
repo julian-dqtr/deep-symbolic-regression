@@ -11,15 +11,20 @@ GRAMMAR_CONFIG = {
     "unary_operators": ["sin", "cos", "exp", "log"],
     "constants": {
         "1.0": 1.0,
+        "0.5": 0.5,
+        "2.0": 2.0,
+        "3.0": 3.0,
+        "pi": 3.141592653589793,
+        "const": 1.0,
     },
-    "max_num_variables": 4,
+    "max_num_variables": 10,
 }
 
 MODEL_CONFIG = {
     "token_embedding_dim": 64,
-    "hidden_dim": 128,
+    "hidden_dim": 512,
     "dataset_embedding_dim": 64,
-    "num_lstm_layers": 1,
+    "num_lstm_layers": 2,
 }
 
 TRAINING_CONFIG = {

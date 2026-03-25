@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import numpy as np
 
 from ..config import TRAINING_CONFIG
 
-
-class ReinforceOptimizer:
-    def __init__(self, policy):
+class RiskSeekingOptimizer:
+    def __init__(self, policy, epsilon=0.05):
         self.policy = policy
+        self.epsilon = epsilon
 
         self.learning_rate = TRAINING_CONFIG["learning_rate"]
         self.entropy_weight = TRAINING_CONFIG["entropy_weight"]
@@ -15,41 +16,35 @@ class ReinforceOptimizer:
 
         self.optimizer = optim.Adam(self.policy.parameters(), lr=self.learning_rate)
 
-        # Moving-average baseline to reduce variance
-        self.baseline = 0.0
-        self.baseline_momentum = 0.9
-
     def compute_returns(self, rewards):
-        """
-        Since the environment gives zero intermediate rewards and only a final reward,
-        we propagate the final reward to all time steps.
-        """
         final_reward = rewards[-1] if len(rewards) > 0 else 0.0
         returns = [final_reward for _ in rewards]
         return torch.tensor(returns, dtype=torch.float32)
 
-    def update(self, batch_episodes):
-        """
-        Perform one REINFORCE update from a batch of collected episodes.
+    def update(self, batch_episodes, memory_episodes=None):
+        rewards = [ep["final_reward"] for ep in batch_episodes]
+        threshold = np.quantile(rewards, 1.0 - self.epsilon)
 
-        Args:
-            batch_episodes (list): list of episode dicts
+        elite_episodes = [ep for ep in batch_episodes if ep["final_reward"] >= threshold]
 
-        Returns:
-            dict: training statistics
-        """
+        if not elite_episodes:
+            elite_episodes = batch_episodes
+
+        # Inject historical best equations from memory!
+        if memory_episodes:
+            elite_episodes.extend(memory_episodes)
+
         all_log_probs = []
         all_entropies = []
         all_returns = []
 
-        for episode in batch_episodes:
+        for episode in elite_episodes:
             if len(episode["log_probs"]) == 0:
                 continue
-
             device = episode["log_probs"][0].device
 
-            log_probs = torch.stack(episode["log_probs"])   # (T,)
-            entropies = torch.stack(episode["entropies"])   # (T,)
+            log_probs = torch.stack(episode["log_probs"])
+            entropies = torch.stack(episode["entropies"])
             returns = self.compute_returns(episode["rewards"]).to(device)
 
             all_log_probs.append(log_probs)
@@ -61,25 +56,17 @@ class ReinforceOptimizer:
                 "loss": 0.0,
                 "policy_loss": 0.0,
                 "entropy": 0.0,
-                "baseline": float(self.baseline),
-                "final_reward": float(np.mean([ep["final_reward"] for ep in batch_episodes])),
+                "final_reward": float(np.mean(rewards)),
             }
 
         log_probs = torch.cat(all_log_probs)
         entropies = torch.cat(all_entropies)
         returns = torch.cat(all_returns)
 
-        # Update moving-average baseline
-        mean_return = returns.mean().item()
-        self.baseline = (
-            self.baseline_momentum * self.baseline
-            + (1.0 - self.baseline_momentum) * mean_return
-        )
+        # In Risk-Seeking Policy Gradient, we simply maximize the probability of the elite episodes
+        policy_loss = -log_probs.sum()
+        entropy_bonus = entropies.sum()
 
-        advantages = returns - self.baseline
-
-        policy_loss = -(log_probs * advantages).sum() / len(batch_episodes)
-        entropy_bonus = entropies.sum() / len(batch_episodes)
         loss = policy_loss - self.entropy_weight * entropy_bonus
 
         self.optimizer.zero_grad()
@@ -90,7 +77,6 @@ class ReinforceOptimizer:
         return {
             "loss": float(loss.item()),
             "policy_loss": float(policy_loss.item()),
-            "entropy": float(entropy_bonus.item()),
-            "baseline": float(self.baseline),
-            "final_reward": float(np.mean([ep["final_reward"] for ep in batch_episodes])),
+            "entropy": float(entropy_bonus.mean().item()),
+            "final_reward": float(np.mean(rewards)), # Mean reward of the whole batch
         }

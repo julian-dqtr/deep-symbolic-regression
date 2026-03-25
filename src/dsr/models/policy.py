@@ -62,6 +62,10 @@ class SymbolicPolicy(nn.Module):
 
         self.action_head = nn.Linear(self.hidden_dim, vocab_size)
         self.value_head = nn.Linear(self.hidden_dim, 1)
+        self.cached_dataset_embedding = None
+
+    def set_dataset_embedding(self, x: torch.Tensor, y: torch.Tensor):
+        self.cached_dataset_embedding = self.encode_dataset(x, y).detach()
 
     def _build_dataset_encoder_if_needed(self, num_features: int):
         if self.dataset_encoder is None:
@@ -93,14 +97,18 @@ class SymbolicPolicy(nn.Module):
     def forward(
         self,
         token_ids: torch.Tensor,
-        x: torch.Tensor,
-        y: torch.Tensor,
         pending_slots: int,
         length: int,
         action_mask: torch.Tensor | None = None,
+        x: torch.Tensor | None = None,
+        y: torch.Tensor | None = None,
     ):
         seq_embedding = self.encode_tokens(token_ids)
-        dataset_embedding = self.encode_dataset(x, y)
+        
+        if self.cached_dataset_embedding is not None:
+            dataset_embedding = self.cached_dataset_embedding
+        else:
+            dataset_embedding = self.encode_dataset(x, y)
 
         scalar_features = torch.tensor(
             [float(pending_slots), float(length)],

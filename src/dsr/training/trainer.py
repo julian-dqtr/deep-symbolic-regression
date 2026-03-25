@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 
 from ..config import TRAINING_CONFIG
@@ -7,9 +8,10 @@ from ..core.expression import safe_prefix_to_infix
 from ..core.evaluator import PrefixEvaluator
 from ..models.policy import SymbolicPolicy
 from ..analysis.memory import TopKMemory
-from .rollout import collect_episode
+from .rollout import collect_episode, recompute_episode
 from .policy_optimizer import ReinforceOptimizer
 from .ppo_optimizer import PPOOptimizer
+from .risk_seeking_optimizer import RiskSeekingOptimizer
 
 
 def normalize_device(device: str) -> str:
@@ -37,8 +39,14 @@ class Trainer:
 
         self.policy = SymbolicPolicy(vocab_size=len(self.grammar)).to(self.device)
 
+        self.tensor_X = torch.tensor(self.X, dtype=torch.float32, device=self.device)
+        self.tensor_y = torch.tensor(self.y, dtype=torch.float32, device=self.device)
+        self.policy.set_dataset_embedding(self.tensor_X, self.tensor_y)
+
         if optimizer_name.lower() == "ppo":
             self.rl_optimizer = PPOOptimizer(self.policy)
+        elif optimizer_name.lower() == "rspg":
+            self.rl_optimizer = RiskSeekingOptimizer(self.policy)
         else:
             self.rl_optimizer = ReinforceOptimizer(self.policy)
 
@@ -61,7 +69,7 @@ class Trainer:
     def _update_memory(self, tokens, source="sampling"):
         eval_result = self.evaluator.evaluate(tokens=tokens, X=self.X, y=self.y)
         reward = -eval_result["nmse"] - 0.01 * len(tokens) if eval_result["is_valid"] else -1.0
-        infix = safe_prefix_to_infix(tokens, self.grammar)
+        infix = safe_prefix_to_infix(tokens, self.grammar, eval_result.get("optimized_constants", []))
 
         self.memory.add(
             tokens=tokens,
@@ -73,37 +81,64 @@ class Trainer:
         )
 
     def train(self):
-        for episode_idx in range(1, self.num_episodes + 1):
-            episode = collect_episode(
-                env=self.env,
-                policy=self.policy,
-                grammar=self.grammar,
-                device=self.device,
-            )
+        episode_idx = 0
+        while episode_idx < self.num_episodes:
+            batch_episodes = []
+            current_batch_size = min(self.batch_size, self.num_episodes - episode_idx)
+            
+            for _ in range(current_batch_size):
+                episode = collect_episode(
+                    env=self.env,
+                    policy=self.policy,
+                    grammar=self.grammar,
+                    device=self.device,
+                )
+                batch_episodes.append(episode)
+                self._update_memory(episode["tokens"], source="sampling")
 
-            stats = self.rl_optimizer.update(episode)
+                if episode["final_reward"] > self.best_reward:
+                    self.best_reward = episode["final_reward"]
+                    self.best_episode = episode
+                    print("New best expression:", episode["tokens"])
+                    
+                episode_idx += 1
 
+            # Inject Top-K Memory Episodes 
+            memory_items = self.memory.to_rows()
+            memory_episodes = []
+            
+            # Recompute gradients natively for the historical memories using the current network parameters 
+            for item in memory_items:
+                try:
+                    ep = recompute_episode(
+                        env=self.env,
+                        policy=self.policy,
+                        grammar=self.grammar,
+                        tokens=item["tokens"],
+                        device=self.device,
+                    )
+                    memory_episodes.append(ep)
+                except Exception as e:
+                    pass # Safety net in case an old sequence causes an unexpected PyTorch grid error 
+
+            if self.optimizer_name == "rspg":
+                stats = self.rl_optimizer.update(batch_episodes, memory_episodes=memory_episodes)
+            else:
+                stats = self.rl_optimizer.update(batch_episodes)
+
+            # Record stats
             self.history["loss"].append(stats["loss"])
             self.history["policy_loss"].append(stats["policy_loss"])
             self.history["value_loss"].append(stats.get("value_loss", 0.0))
             self.history["entropy"].append(stats["entropy"])
             self.history["final_reward"].append(stats["final_reward"])
-            self.history["episode_length"].append(len(episode["tokens"]))
 
-            self._update_memory(episode["tokens"], source="sampling")
-
-            if stats["final_reward"] > self.best_reward:
-                self.best_reward = stats["final_reward"]
-                self.best_episode = episode
-                print("New best expression:", episode["tokens"])
-
-            if episode_idx % 100 == 0 or episode_idx == 1:
+            if episode_idx % max(100, self.batch_size) == 0 or episode_idx == current_batch_size:
                 print(
                     f"[Episode {episode_idx}/{self.num_episodes}] "
                     f"optimizer={self.optimizer_name} | "
-                    f"reward={stats['final_reward']:.4f} | "
+                    f"batch_reward={stats['final_reward']:.4f} | "
                     f"best={self.best_reward:.4f} | "
-                    f"len={len(episode['tokens'])} | "
                     f"entropy={stats['entropy']:.4f}"
                 )
 
