@@ -138,7 +138,7 @@ def train_on_suite(suite_name: str, args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--suite", type=str, default="pmlb_feynman_all", choices=["pmlb_feynman_all", "pmlb_feynman_subset"])
-    parser.add_argument("--num_episodes", type=int, default=20000)
+    parser.add_argument("--num_episodes", type=int, default=10)
     parser.add_argument("--num_samples", type=int, default=100)
     parser.add_argument("--learning_rate", type=float, default=0.000335)
     parser.add_argument("--entropy_weight", type=float, default=0.017)

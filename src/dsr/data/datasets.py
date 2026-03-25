@@ -38,13 +38,25 @@ class SymbolicTask:
         return X, y
 
 import pandas as pd
+import os
+
+_CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "dsr", "pmlb")
 
 def fetch_pmlb_dataset(name: str) -> Tuple[np.ndarray, np.ndarray]:
+    os.makedirs(_CACHE_DIR, exist_ok=True)
+    cache_path = os.path.join(_CACHE_DIR, f"{name}.npz")
+
+    if os.path.exists(cache_path):
+        data = np.load(cache_path)
+        return data["X"], data["y"]
+
     url = f"https://github.com/EpistasisLab/pmlb/raw/master/datasets/{name}/{name}.tsv.gz"
+    print(f"  [cache miss] Downloading {name}...", flush=True)
     df = pd.read_csv(url, sep='\t', compression='gzip')
     df.dropna(inplace=True)
     X = df.drop('target', axis=1).values.astype(np.float32)
     y = df['target'].values.astype(np.float32)
+    np.savez(cache_path, X=X, y=y)
     return X, y
 
 def get_pmlb_task(name: str, num_samples: int = 100) -> SymbolicTask:
