@@ -8,7 +8,9 @@ from ..core.expression import safe_prefix_to_infix
 from ..core.evaluator import PrefixEvaluator
 from ..models.policy import SymbolicPolicy
 from ..analysis.memory import TopKMemory
-from .rollout import collect_episode, recompute_episode
+from ..models.policy import SymbolicPolicy
+from ..analysis.memory import TopKMemory
+from .rollout import collect_episode, recompute_episode, collect_batched_episodes
 from .policy_optimizer import ReinforceOptimizer
 from .ppo_optimizer import PPOOptimizer
 from .risk_seeking_optimizer import RiskSeekingOptimizer
@@ -66,38 +68,43 @@ class Trainer:
         self.best_episode = None
         self.memory = TopKMemory(capacity=20)
 
-    def _update_memory(self, tokens, source="sampling"):
-        eval_result = self.evaluator.evaluate(tokens=tokens, X=self.X, y=self.y)
-        reward = -eval_result["nmse"] - 0.01 * len(tokens) if eval_result["is_valid"] else -1.0
-        infix = safe_prefix_to_infix(tokens, self.grammar, eval_result.get("optimized_constants", []))
-
-        self.memory.add(
-            tokens=tokens,
-            infix=infix,
-            reward=reward,
-            nmse=eval_result["nmse"],
-            complexity=len(tokens),
-            source=source,
-        )
-
     def train(self):
         episode_idx = 0
         while episode_idx < self.num_episodes:
-            batch_episodes = []
             current_batch_size = min(self.batch_size, self.num_episodes - episode_idx)
             
-            for _ in range(current_batch_size):
-                episode = collect_episode(
-                    env=self.env,
-                    policy=self.policy,
-                    grammar=self.grammar,
-                    device=self.device,
+            batch_episodes = collect_batched_episodes(
+                env_template=self.env,
+                policy=self.policy,
+                grammar=self.grammar,
+                batch_size=current_batch_size,
+                max_length=30,
+                device=self.device
+            )
+            
+            for episode in batch_episodes:
+                eval_result = self.evaluator.evaluate(tokens=episode["tokens"], X=self.X, y=self.y)
+                reward = -eval_result["nmse"] - 0.01 * len(episode["tokens"]) if eval_result["is_valid"] else -1.0
+                
+                L = len(episode["tokens"])
+                episode["rewards"] = [0.0] * L
+                if L > 0:
+                    episode["rewards"][-1] = reward
+                episode["final_reward"] = reward
+                
+                infix = safe_prefix_to_infix(episode["tokens"], self.grammar, eval_result.get("optimized_constants", []))
+                
+                self.memory.add(
+                    tokens=episode["tokens"],
+                    infix=infix,
+                    reward=reward,
+                    nmse=eval_result["nmse"],
+                    complexity=L,
+                    source="sampling",
                 )
-                batch_episodes.append(episode)
-                self._update_memory(episode["tokens"], source="sampling")
 
-                if episode["final_reward"] > self.best_reward:
-                    self.best_reward = episode["final_reward"]
+                if reward > self.best_reward:
+                    self.best_reward = reward
                     self.best_episode = episode
                     print("New best expression:", episode["tokens"])
                     

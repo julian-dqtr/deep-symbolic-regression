@@ -76,16 +76,21 @@ class SymbolicPolicy(nn.Module):
             ).to(self.token_embedding.weight.device)
 
     def encode_tokens(self, token_ids: torch.Tensor) -> torch.Tensor:
+        is_1d = token_ids.dim() == 1
+        
         if token_ids.numel() == 0:
             device = self.token_embedding.weight.device
+            if not is_1d and token_ids.dim() == 2:
+                B = token_ids.size(0)
+                return torch.zeros(B, self.hidden_dim, device=device)
             return torch.zeros(self.hidden_dim, device=device)
 
-        if token_ids.dim() == 1:
-            token_ids = token_ids.unsqueeze(0)
-
-        embedded = self.token_embedding(token_ids)
+        inputs = token_ids.unsqueeze(0) if is_1d else token_ids
+        embedded = self.token_embedding(inputs)
         _, (h_n, _) = self.sequence_encoder(embedded)
-        return h_n[-1, 0, :]
+        
+        out = h_n[-1]
+        return out[0] if is_1d else out
 
     def encode_dataset(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         if y.dim() == 1:
@@ -97,8 +102,8 @@ class SymbolicPolicy(nn.Module):
     def forward(
         self,
         token_ids: torch.Tensor,
-        pending_slots: int,
-        length: int,
+        pending_slots,
+        length,
         action_mask: torch.Tensor | None = None,
         x: torch.Tensor | None = None,
         y: torch.Tensor | None = None,
@@ -110,16 +115,21 @@ class SymbolicPolicy(nn.Module):
         else:
             dataset_embedding = self.encode_dataset(x, y)
 
-        scalar_features = torch.tensor(
-            [float(pending_slots), float(length)],
-            dtype=torch.float32,
-            device=token_ids.device,
-        )
-
-        state_vector = torch.cat(
-            [seq_embedding, dataset_embedding, scalar_features],
-            dim=0,
-        )
+        if isinstance(pending_slots, int) or (isinstance(pending_slots, torch.Tensor) and pending_slots.dim() == 0):
+            scalar_features = torch.tensor(
+                [float(pending_slots), float(length)],
+                dtype=torch.float32,
+                device=token_ids.device,
+            )
+            state_vector = torch.cat(
+                [seq_embedding, dataset_embedding, scalar_features],
+                dim=0,
+            )
+        else:
+            B = seq_embedding.shape[0]
+            dataset_emb_batch = dataset_embedding.unsqueeze(0).expand(B, -1)
+            scalar_features = torch.cat([pending_slots.float(), length.float()], dim=-1)
+            state_vector = torch.cat([seq_embedding, dataset_emb_batch, scalar_features], dim=-1)
 
         hidden = self.state_mlp(state_vector)
         logits = self.action_head(hidden)
