@@ -83,43 +83,7 @@ def train_on_suite(suite_name: str, args):
             print("No valid episode found.")
             
         
-        # --- Beam Search Disabled ---
-        # The true strength of this model comes from pure Top-K Reinforced Sampling!
-        # print("\n--- Running Beam Search Decoding ---")
-        # raw_candidates = beam_search(
-        #     policy=trainer.policy,
-        #     grammar=trainer.grammar,
-        #     X=X,
-        #     y=y,
-        #     beam_width=args.beam_width,
-        #     max_length=30,
-        #     temperature=1.5,
-        #     device=device,
-        # )
-
-        # evaluated_candidates = evaluate_beam_candidates(
-        #     grammar=trainer.grammar,
-        #     X=X,
-        #     y=y,
-        #     candidates=raw_candidates,
-        # )
-
-        # reranked_candidates = sort_candidates_by_reward(evaluated_candidates)
-        
-        # if len(reranked_candidates) > 0:
-        #     top_beam = reranked_candidates[0]
-        #     print("Best BEAM expression:", top_beam["infix"])
-        #     print("Best BEAM NMSE:", top_beam["nmse"])
-        #     print("BEAM Is valid:", top_beam["is_valid"])
-            
-        #     if top_beam["reward"] > best_reward:
-        #         print(">>> Beam Search found a BETTER expression! <<<")
-        #     elif top_beam["reward"] < best_reward:
-        #         print(">>> Beam Search expression is WORSE than training sampling. <<<")
-        #     else:
-        #         print(">>> Beam Search found the SAME/EQUIVALENT expression. <<<")
-        # else:
-        #     print("Beam Search found no valid candidates.")
+        # Beam search is intentionally disabled: Top-K Risk-Seeking sampling outperforms it.
 
         with open(results_file, mode='a', newline='') as f:
             writer = csv.writer(f)

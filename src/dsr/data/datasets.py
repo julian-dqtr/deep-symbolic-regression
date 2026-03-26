@@ -1,7 +1,9 @@
+import os
 from dataclasses import dataclass
 from typing import Callable, List, Tuple
 
 import numpy as np
+import pandas as pd
 
 
 @dataclass
@@ -37,8 +39,6 @@ class SymbolicTask:
         y = self.target_function(X).astype(np.float32)
         return X, y
 
-import pandas as pd
-import os
 
 _CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "dsr", "pmlb")
 
@@ -128,8 +128,8 @@ def get_task_by_name(task_name: str, num_samples: int = 100) -> SymbolicTask:
     if task_name.startswith("feynman_"):
         try:
             return get_pmlb_task(task_name, num_samples=num_samples)
-        except Exception as e:
-            pass # Suppress warning if it's completely unknown
+        except Exception:
+            pass  # Unknown Feynman task name — let the ValueError below surface
 
     raise ValueError(f"Unknown task name: {task_name}")
 

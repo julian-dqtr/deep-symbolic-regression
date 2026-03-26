@@ -107,8 +107,6 @@ class SymbolicRegressionEnv:
             "tokens": list(self.tokens),
             "pending_slots": self.pending_slots,
             "length": len(self.tokens),
-            # "X": self.X,
-            # "y": self.y,
         }
     
     def valid_action_mask(self) -> np.ndarray:

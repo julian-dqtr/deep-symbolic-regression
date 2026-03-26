@@ -8,8 +8,6 @@ from ..core.expression import safe_prefix_to_infix
 from ..core.evaluator import PrefixEvaluator
 from ..models.policy import SymbolicPolicy
 from ..analysis.memory import TopKMemory
-from ..models.policy import SymbolicPolicy
-from ..analysis.memory import TopKMemory
 from .rollout import collect_episode, recompute_episode, collect_batched_episodes
 from .policy_optimizer import ReinforceOptimizer
 from .ppo_optimizer import PPOOptimizer
@@ -125,8 +123,8 @@ class Trainer:
                         device=self.device,
                     )
                     memory_episodes.append(ep)
-                except Exception as e:
-                    pass # Safety net in case an old sequence causes an unexpected PyTorch grid error 
+                except Exception:
+                    pass  # Safety net: skip sequences that cause unexpected PyTorch graph errors
 
             if self.optimizer_name == "rspg":
                 stats = self.rl_optimizer.update(batch_episodes, memory_episodes=memory_episodes)
