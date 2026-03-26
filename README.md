@@ -50,7 +50,7 @@ Benchmark: **PMLB Feynman Physics Suite** (119 tasks, 50 000 episodes each).
 
 ### With `uv` (recommended)
 ```bash
-git clone <repo-url>
+git clone https://github.com/julian-dqtr/deep-symbolic-regression.git
 cd deep-symbolic-regression
 uv sync          # reads pyproject.toml + uv.lock → exact reproducible environment
 ```
