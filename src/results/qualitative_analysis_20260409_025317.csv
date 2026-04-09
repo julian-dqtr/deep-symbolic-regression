@@ -1,0 +1,120 @@
+task,difficulty,num_vars,expr_depth,n_special_ops,operators,has_exp,has_trig,has_log,has_sqrt,has_arcsin,has_lorentz,true_expression,recovered_expression,nmse,quality
+feynman_I_12_1,Easy,2,0,0,none,0,0,0,0,0,0,mu*Nn,(x0 * x1),0.0,Perfect
+feynman_I_12_5,Easy,2,0,0,none,0,0,0,0,0,0,q2*Ef,(x0 * x1),0.0,Perfect
+feynman_I_25_13,Easy,2,0,0,none,0,0,0,0,0,0,q/C,(x0 / x1),0.0,Perfect
+feynman_I_29_4,Easy,2,0,0,none,0,0,0,0,0,0,omega/c,(x0 / x1),0.0,Perfect
+feynman_I_39_11,Easy,3,1,0,none,0,0,0,0,0,0,1/(gamma-1)*pr*V,(x1 * (x2 / (x0 - 1.0))),0.0,Perfect
+feynman_II_27_18,Easy,2,0,0,none,0,0,0,0,0,0,epsilon*Ef**2,((x1 * x0) * x1),0.0,Perfect
+feynman_I_14_4,Easy,2,0,0,none,0,0,0,0,0,0,1/2*k_spring*x**2,(((sqrt(x1) - x1) * exp(1.0)) * (x0 / log(0.5))),0.021393,Good
+feynman_II_8_31,Easy,2,0,0,none,0,0,0,0,0,0,epsilon*Ef**2/2,((x0 * x1) * sqrt(x1)),0.025606,Good
+feynman_I_39_1,Easy,2,0,0,none,0,0,0,0,0,0,3/2*pr*V,((x0 * x1) * sqrt(sqrt(x0))),0.042372,Good
+feynman_III_15_27,Easy,3,1,0,none,0,0,0,0,0,0,2*pi*alpha/(n*d),((x0 / x2) + (((x0 / (0.5 * 0.5)) / x2) / x1)),0.051058,Poor
+feynman_I_34_27,Easy,2,2,0,none,0,0,0,0,0,0,(h/(2*pi))*omega,((log(x1) + (log(cos(sqrt(1))) / 1)) + log(x0)),0.122166,Poor
+feynman_II_38_14,Easy,2,2,0,none,0,0,0,0,0,0,Y/(2*(1+sigma)),((x0 pow sqrt(1)) / ((x1 + 1.0) + 3.0)),0.123823,Poor
+feynman_I_18_12,Easy,3,1,1,sin,0,1,0,0,0,0,r*F*sin(theta),((x0 * pi) * sin(x2)),0.12912,Poor
+feynman_II_34_2,Easy,3,0,0,none,0,0,0,0,0,0,q*v*r/2,((log((2.0 + x2)) / 1.0) * (x0 * x1)),0.134999,Poor
+feynman_I_6_2a,Easy,1,1,2,"exp, sqrt",1,0,0,1,0,0,exp(-theta**2/2)/sqrt(2*pi),((0.5 pow exp((x0 - 0.5))) pow 1.0),0.14028,Poor
+feynman_I_18_4,Easy,4,1,0,none,0,0,0,0,0,0,(m1*r1+m2*r2)/(m1+m2),sqrt(((cos(sqrt(x1)) - x3) * x2)),0.152159,Poor
+feynman_III_12_43,Easy,2,2,0,none,0,0,0,0,0,0,n*(h/(2*pi)),sqrt(log(((x1 pow x0) / 2.0))),0.158912,Poor
+feynman_II_34_11,Easy,4,1,0,none,0,0,0,0,0,0,g_*q*B/(2*m),(sin(1.0) + (((x0 + sqrt(cos(0.5))) pow 1.0) * (x1 / x3))),0.234686,Poor
+feynman_I_18_14,Easy,4,1,1,sin,0,1,0,0,0,0,m*r*v*sin(theta),((pi pow (((1 pow x2) * log(exp(pi))) * sin(log(x1)))) * sin(x3)),0.238709,Poor
+feynman_I_39_22,Easy,4,0,0,none,0,0,0,0,0,0,n*kb*T/V,(((x1 + x3) / (x2 / x0)) + (x3 / (exp(1) pow (1 / x1)))),0.24875,Poor
+feynman_III_10_19,Easy,4,1,1,sqrt,0,0,0,1,0,0,mom*sqrt(Bx**2+By**2+Bz**2),((3.0 + x3) * x0),0.251468,Poor
+feynman_I_34_1,Easy,3,1,0,none,0,0,0,0,0,0,omega_0/(1-v/c),(x2 + log((x1 pow x2))),0.253148,Poor
+feynman_II_27_16,Easy,3,0,0,none,0,0,0,0,0,0,epsilon*c*Ef**2,((x2 * (x2 * x0)) * pi),0.295257,Poor
+feynman_II_38_3,Easy,4,0,0,none,0,0,0,0,0,0,Y*A*x/d,((x3 * (x1 pow log(x0))) + log(pi)),0.347142,Poor
+feynman_II_8_7,Easy,3,1,0,none,0,0,0,0,0,0,3/5*q**2/(4*pi*epsilon*d),((sin(((cos((x2 pow pi)) + 3.0) pow ((2.0 * 0.5) / ((x0 * cos(((1.0 - 0.5) - exp(log(1))))) - x0)))) / x2) / 0.5),0.360117,Poor
+feynman_II_3_24,Easy,2,1,0,none,0,0,0,0,0,0,Pwr/(4*pi*r**2),(0.5 pow ((1.0 * 2.0) pow x1)),0.362543,Poor
+feynman_II_15_5,Easy,3,1,1,cos,0,1,0,0,0,0,-p_d*Ef*cos(theta),(x0 * log(log(((x2 pow log(log(log(x2)))) pow x0)))),0.383675,Poor
+feynman_I_43_31,Easy,3,0,0,none,0,0,0,0,0,0,mob*kb*T,sqrt(exp((((x0 + x2) + cos(x2)) - sin(((x2 - cos(1.0)) - x1))))),0.389604,Poor
+feynman_III_7_38,Easy,3,2,0,none,0,0,0,0,0,0,2*mom*B/(h/(2*pi)),(exp((exp(1) + sqrt(((1.0 - x2) + x1)))) + 0.5),0.394788,Poor
+feynman_I_43_16,Easy,4,0,0,none,0,0,0,0,0,0,mu_drift*q*Volt/d,(((x1 + x2) * ((x0 + x2) - x2)) / x3),0.403572,Poor
+feynman_I_34_8,Easy,4,0,0,none,0,0,0,0,0,0,q*v*B/p,((x1 * x2) * log(x0)),0.463157,Poor
+feynman_II_2_42,Easy,5,1,0,none,0,0,0,0,0,0,kappa*(T2-T1)*A/d,(((sin(x3) + x2) - (x1 * sqrt(x1))) + x2),0.467203,Poor
+feynman_I_47_23,Easy,3,1,1,sqrt,0,0,0,1,0,0,sqrt(gamma*pr/rho),sqrt((x0 / sqrt((x2 / 3.0)))),0.494007,Poor
+feynman_II_34_2a,Easy,3,1,0,none,0,0,0,0,0,0,q*v/(2*pi*r),(log(x1) / x2),0.500199,Poor
+feynman_II_15_4,Easy,3,1,1,cos,0,1,0,0,0,0,-mom*B*cos(theta),((log(x2) * x1) pow log(x0)),0.506395,Poor
+feynman_III_17_37,Easy,3,2,1,cos,0,1,0,0,0,0,beta*(1+alpha*cos(theta)),(cos(x2) * x1),0.516742,Poor
+feynman_II_10_9,Easy,3,1,0,none,0,0,0,0,0,0,sigma_den/epsilon*1/(1+chi),(((sin(cos(2.0)) * x0) pow 0.5) / x1),0.522063,Poor
+feynman_II_34_29a,Easy,3,1,0,none,0,0,0,0,0,0,q*h/(4*pi*m),cos(sqrt(sqrt(x2))),0.583537,Poor
+feynman_I_14_3,Easy,3,0,0,none,0,0,0,0,0,0,m*g*z,((x2 * sqrt(exp(x0))) + x2),0.607535,Poor
+feynman_II_37_1,Easy,3,1,0,none,0,0,0,0,0,0,mom*(1+chi)*B,(exp(3.0) + exp((x2 - 1.0))),0.677016,Poor
+feynman_III_21_20,Easy,4,0,0,none,0,0,0,0,0,0,-rho_c_0*q*A_vec/m,((((1.0 - x2) + (((1.0 - (x0 * pi)) + x0) + 0.5)) - x2) + 1),0.733558,Poor
+feynman_I_13_4,Easy,4,1,0,none,0,0,0,0,0,0,1/2*m*(v**2+u**2+w**2),(exp((sqrt((x0 + pi)) + 1)) + (exp(3.0) - sqrt(cos(cos(exp(x0)))))),0.764142,Poor
+feynman_I_11_19,Easy,6,0,0,none,0,0,0,0,0,0,x1*y1+x2*y2+x3*y3,((x4 + x2) + exp(pi)),0.873929,Poor
+feynman_I_8_14,Easy,4,2,1,sqrt,0,0,0,1,0,0,sqrt((x2-x1)**2+(y2-y1)**2),INVALID_EXPRESSION,1.0,Poor
+feynman_II_13_17,Easy,4,1,0,none,0,0,0,0,0,0,1/(4*pi*epsilon*c**2)*2*I/r,INVALID_EXPRESSION,1.0,Poor
+feynman_II_4_23,Easy,3,1,0,none,0,0,0,0,0,0,q/(4*pi*epsilon*r),INVALID_EXPRESSION,1.0,Poor
+feynman_III_13_18,Easy,4,2,0,none,0,0,0,0,0,0,2*E_n*d**2*k/(h/(2*pi)),INVALID_EXPRESSION,1.0,Poor
+feynman_I_37_4,Medium,3,1,2,"cos, sqrt",0,1,0,1,0,0,I1+I2+2*sqrt(I1*I2)*cos(delta),((((x1 * cos(x2)) + x1) + x0) + (cos(x2) * x0)),0.006339,Good
+feynman_I_26_2,Medium,2,2,2,"sin, arcsin",0,1,0,0,1,0,arcsin(n*sin(theta2)),(x0 * sin(x1)),0.020774,Good
+feynman_II_11_28,Medium,2,2,0,none,0,0,0,0,0,0,1+n*alpha/(1-(n*alpha/3)),(exp((x1 * x0)) / 1.0),0.022159,Good
+feynman_II_13_23,Medium,3,1,1,sqrt,0,0,0,1,0,1,rho_c_0/sqrt(1-v**2/c**2),x0,0.026349,Good
+feynman_I_10_7,Medium,3,1,1,sqrt,0,0,0,1,0,1,m_0/sqrt(1-v**2/c**2),x0,0.034866,Good
+feynman_II_24_17,Medium,3,1,1,sqrt,0,0,0,1,0,0,sqrt(omega**2/c**2-pi**2/d**2),(x0 / x1),0.07802,Poor
+feynman_I_16_6,Medium,3,1,0,none,0,0,0,0,0,0,(u+v)/(1+u*v/c**2),(x0 / log(3.0)),0.106982,Poor
+feynman_I_38_12,Medium,4,2,0,none,0,0,0,0,0,0,4*pi*epsilon*(h/(2*pi))**2/(m*q**2),((1.0 + log(cos(1))) / log(x1)),0.155704,Poor
+feynman_I_44_4,Medium,5,1,0,none,0,0,0,0,0,0,n*kb*T*ln(V2/V1),((x4 - x3) * (x0 * x1)),0.194843,Poor
+feynman_I_30_5,Medium,3,2,1,arcsin,0,0,0,0,1,0,arcsin(lambd/(n*d)),(0.5 / x2),0.317121,Poor
+feynman_I_12_2,Medium,4,1,0,none,0,0,0,0,0,0,q1*q2*r/(4*pi*epsilon*r**3),(sqrt(0.5) / (pi pow x3)),0.347396,Poor
+feynman_I_24_6,Medium,4,1,0,none,0,0,0,0,0,0,1/2*m*(omega**2+omega_0**2)*1/2*x**2,(exp(x3) * x0),0.367185,Poor
+feynman_I_32_5,Medium,4,1,0,none,0,0,0,0,0,0,q**2*a**2/(6*pi*epsilon*c**3),((x0 / ((((x3 - 0.5) - (exp(1) pow x3)) / 3.0) pow (1 pow 2.0))) / x2),0.373044,Poor
+feynman_I_13_12,Medium,5,1,0,none,0,0,0,0,0,0,G*m1*m2*(1/r2-1/r1),((x2 - x3) * ((x4 - x3) + x0)),0.402507,Poor
+feynman_I_27_6,Medium,3,1,0,none,0,0,0,0,0,0,1/(1/d1+n/d2),exp((((log((x1 * cos(log(x2)))) / 2.0) + sin(sqrt(1))) - (log(pi) pow sqrt(0.5)))),0.417462,Poor
+feynman_I_40_1,Medium,6,2,1,exp,1,0,0,0,0,0,n_0*exp(-m*g*x/(kb*T)),(sqrt((log(x3) pow x0)) / x2),0.465752,Poor
+feynman_I_43_43,Medium,4,1,0,none,0,0,0,0,0,0,1/(gamma-1)*kb*v/A,((3.0 pow (x3 / x0)) / x2),0.471384,Poor
+feynman_II_11_20,Medium,5,1,0,none,0,0,0,0,0,0,n_rho*p_d**2*Ef/(3*kb*T),((((0.5 * x0) * x1) * (0.5 * (x1 * (0.5 * 0.5)))) * x2),0.536583,Poor
+feynman_I_12_4,Medium,3,1,0,none,0,0,0,0,0,0,q1*r/(4*pi*epsilon*r**3),((cos((sin(1.0) + 0.5)) pow x2) / 3.0),0.552892,Poor
+feynman_II_11_3,Medium,5,2,0,none,0,0,0,0,0,0,q*Ef/(m*(omega_0**2-omega**2)),((x0 / x2) / x3),0.571424,Poor
+feynman_I_6_2b,Medium,3,3,2,"exp, sqrt",1,0,0,1,0,0,exp(-((theta-theta1)/sigma)**2/2)/(sqrt(2*pi)*sigma),((((log(0.5) / (cos(cos(3.0)) - 2.0)) + log(1.0)) * (3.0 pow cos(2.0))) / x0),0.60803,Poor
+feynman_III_15_14,Medium,3,2,0,none,0,0,0,0,0,0,(h/(2*pi))**2/(2*E_n*d**2),((cos((sin(1.0) + 0.5)) pow x2) / 3.0),0.628582,Poor
+feynman_I_6_2,Medium,2,2,2,"exp, sqrt",1,0,0,1,0,0,exp(-(theta/sigma)**2/2)/(sqrt(2*pi)*sigma),(0.5 pow (x1 + 1)),0.673065,Poor
+feynman_III_15_12,Medium,3,2,1,cos,0,1,0,0,0,0,2*U*(1-cos(k*d)),(x0 + x0),0.759376,Poor
+feynman_I_12_11,Medium,5,2,1,sin,0,1,0,0,0,0,q*(Ef+B*v*sin(theta)),(exp((exp(cos(log(exp(((log(1) pow 0.5) / 1))))) pow sin(x4))) + exp(1.0)),0.773897,Poor
+feynman_II_21_32,Medium,5,2,0,none,0,0,0,0,0,0,q/(4*pi*epsilon*r*(1-v/c)),(0.5 / exp(x1)),0.775046,Poor
+feynman_I_29_16,Medium,4,2,2,"cos, sqrt",0,1,0,1,0,0,sqrt(x1**2+x2**2-2*x1*x2*cos(theta1-theta2)),(x0 + (1 / x0)),0.785842,Poor
+feynman_I_50_26,Medium,4,2,1,cos,0,1,0,0,0,0,x1*(cos(omega*t)+alpha*cos(omega*t)**2),log((x3 pow x2)),0.790042,Poor
+feynman_II_34_29b,Medium,5,2,0,none,0,0,0,0,0,0,g_*mom*B*Jz/(h/(2*pi)),3.0,1.0,Poor
+feynman_II_6_11,Medium,4,1,1,cos,0,1,0,0,0,0,1/(4*pi*epsilon)*p_d*cos(theta)/r**2,INVALID_EXPRESSION,1.0,Poor
+feynman_II_6_15b,Medium,4,1,2,"sin, cos",0,1,0,0,0,0,p_d/(4*pi*epsilon)*3*cos(theta)*sin(theta)/r**3,INVALID_EXPRESSION,1.0,Poor
+feynman_III_8_54,Medium,3,3,1,sin,0,1,0,0,0,0,sin(E_n*t/(h/(2*pi)))**2,INVALID_EXPRESSION,1.0,Poor
+feynman_I_15_3t,Hard,4,1,1,sqrt,0,0,0,1,0,1,(t-u*x/c**2)/sqrt(1-u**2/c**2),x3,0.007492,Good
+feynman_I_15_10,Hard,3,1,1,sqrt,0,0,0,1,0,1,m_0*v/sqrt(1-v**2/c**2),(x1 * x0),0.018003,Good
+feynman_II_11_27,Hard,4,2,0,none,0,0,0,0,0,0,n*alpha/(1-(n*alpha/3))*epsilon*Ef,(((x1 + (x3 * x2)) * x0) * x1),0.018725,Good
+feynman_III_4_33,Hard,4,4,1,exp,1,0,0,0,0,0,(h/(2*pi))*omega/(exp((h/(2*pi))*omega/(kb*T))-1),(x3 * x2),0.024632,Good
+feynman_II_13_34,Hard,3,1,1,sqrt,0,0,0,1,0,1,rho_c_0*v/sqrt(1-v**2/c**2),(x1 * x0),0.028077,Good
+feynman_I_34_14,Hard,3,1,1,sqrt,0,0,0,1,0,1,(1+v/c)/sqrt(1-v**2/c**2)*omega_0,(log(x2) + x2),0.113866,Poor
+feynman_I_15_3x,Hard,4,1,1,sqrt,0,0,0,1,0,1,(x-u*t)/sqrt(1-u**2/c**2),(x0 - 2.0),0.166759,Poor
+feynman_I_41_16,Hard,5,5,1,exp,1,0,0,0,0,0,h/(2*pi)*omega**3/(pi**2*c**2*(exp((h/(2*pi))*omega/(kb*T))-1)),((exp((x0 - x4)) - x0) + sqrt(x1)),0.190727,Poor
+feynman_II_36_38,Hard,8,1,0,none,0,0,0,0,0,0,mom*H/(kb*T)+(mom*alpha)/(epsilon*c**2*kb*T)*M,((x0 / (x2 * sqrt(x3))) * x1),0.21999,Poor
+feynman_II_35_21,Hard,5,2,1,tanh,0,1,0,0,0,0,n_rho*mom*tanh(mom*B/(kb*T)),((x1 + log(0.5)) * x0),0.23357,Poor
+feynman_III_4_32,Hard,4,4,1,exp,1,0,0,0,0,0,1/(exp((h/(2*pi))*omega/(kb*T))-1),((((x3 + x3) + x2) * x2) / x1),0.475955,Poor
+feynman_II_6_15a,Hard,6,1,1,sqrt,0,0,0,1,0,0,p_d/(4*pi*epsilon)*3*z/r**5*sqrt(x**2+y**2),((1.0 / x2) pow 3.0),0.496054,Poor
+feynman_I_48_2,Hard,3,1,1,sqrt,0,0,0,1,0,1,m*c**2/sqrt(1-v**2/c**2),(exp(pi) * x2),0.497632,Poor
+feynman_II_35_18,Hard,5,3,1,exp,1,0,0,0,0,0,n_0/(exp(mom*B/(kb*T))+exp(-mom*B/(kb*T))),((((log(x4) * sin(3.0)) + x0) / x4) / x3),0.61395,Poor
+feynman_I_32_17,Hard,6,2,0,none,0,0,0,0,0,0,(1/2*epsilon*c*Ef**2)*(8*pi*r**2/3)*(omega**4/(omega**2-omega_0**2)**2),(x4 pow (x0 pow x1)),0.69216,Poor
+feynman_III_19_51,Hard,5,3,0,none,0,0,0,0,0,0,-m*q**4/(2*(4*pi*epsilon)**2*(h/(2*pi))**2)*(1/n**2),(sqrt(0.5) + (log((0.5 pow x1)) / x3)),0.758688,Poor
+feynman_III_9_52,Hard,6,3,1,sin,0,1,0,0,0,0,(p_d*Ef*t/(h/(2*pi)))*sin((omega-omega_0)*t/2)**2/((omega-omega_0)*t/2)**2,(exp(x1) + (x1 pow x0)),0.772078,Poor
+feynman_III_14_14,Hard,5,3,1,exp,1,0,0,0,0,0,I_0*(exp(q*Volt/(kb*T))-1),((x2 + x2) pow x1),0.777853,Poor
+feynman_I_30_3,Hard,3,1,1,sin,0,1,0,0,0,0,Int_0*sin(n*theta/2)**2/sin(theta/2)**2,(sqrt(sin((x0 pow x0))) * x0),0.781403,Poor
+feynman_I_9_18,Hard,9,2,0,none,0,0,0,0,0,0,G*m1*m2/((x2-x1)**2+(y2-y1)**2+(z2-z1)**2),INVALID_EXPRESSION,1.0,Poor
+feynman_test_7,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,(x1 + (x0 + sqrt((x0 pow sqrt(x1))))),0.034617,Good
+feynman_test_10,Unknown,3,0,0,none,0,0,0,0,0,0,unknown,(x2 + (0.5 pow x2)),0.073069,Poor
+feynman_test_15,Unknown,4,0,0,none,0,0,0,0,0,0,unknown,x2,0.133535,Poor
+feynman_test_5,Unknown,4,0,0,none,0,0,0,0,0,0,unknown,((x0 * x0) + x0),0.188911,Poor
+feynman_test_8,Unknown,4,0,0,none,0,0,0,0,0,0,unknown,log((sqrt((x2 + 2.0)) pow x0)),0.310348,Poor
+feynman_test_13,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,((0.5 / (exp(pi) / x0)) / (0.5 + x4)),0.319266,Poor
+feynman_test_19,Unknown,6,0,0,none,0,0,0,0,0,0,unknown,((x5 * log(x4)) * (log(x3) pow x4)),0.327571,Poor
+feynman_test_11,Unknown,4,0,0,none,0,0,0,0,0,0,unknown,(((x0 / sqrt(x2)) * sin(x2)) * x3),0.340055,Poor
+feynman_test_12,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,(x3 * (exp(cos(x1)) * (x0 + x1))),0.354555,Poor
+feynman_test_4,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,sqrt(((x2 + ((2.0 + x1) + x2)) / x0)),0.362575,Poor
+feynman_test_2,Unknown,6,0,0,none,0,0,0,0,0,0,unknown,((x0 / x2) pow (x0 / x2)),0.426601,Poor
+feynman_test_16,Unknown,6,0,0,none,0,0,0,0,0,0,unknown,((x1 + x1) pow exp(sqrt(0.5))),0.533796,Poor
+feynman_test_20,Unknown,7,0,0,none,0,0,0,0,0,0,unknown,(((cos(x3) / x0) * x3) pow x3),0.544405,Poor
+feynman_test_1,Unknown,7,0,0,none,0,0,0,0,0,0,unknown,exp(((x0 + (x1 pow x0)) - x5)),0.64545,Poor
+feynman_test_6,Unknown,7,0,0,none,0,0,0,0,0,0,unknown,(x0 / x5),0.64973,Poor
+feynman_test_3,Unknown,4,0,0,none,0,0,0,0,0,0,unknown,(log(3.0) - ((log(pi) + x1) + log(exp(1.0)))),0.670935,Poor
+feynman_test_18,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,((x3 * 0.5) / x2),0.676576,Poor
+feynman_test_9,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,3.0,1.0,Poor
+feynman_test_14,Unknown,5,0,0,none,0,0,0,0,0,0,unknown,INVALID_EXPRESSION,1.0,Poor
+feynman_test_17,Unknown,6,0,0,none,0,0,0,0,0,0,unknown,INVALID_EXPRESSION,1.0,Poor

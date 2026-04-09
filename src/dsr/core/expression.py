@@ -63,7 +63,10 @@ def prefix_to_tree(tokens: List[str], grammar: Grammar) -> ExprNode:
 
 
 def _tree_to_infix(node: ExprNode, grammar: Grammar) -> str:
-    arity = grammar.arity[node.token]
+    # Use .get(..., 0) so that tokens replaced by replace_consts in
+    # safe_prefix_to_infix (e.g. "3.1416") are treated as terminals
+    # even though they are not in grammar.arity.
+    arity = grammar.arity.get(node.token, 0)
 
     if arity == 0:
         return node.token

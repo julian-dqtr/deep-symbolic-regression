@@ -1,0 +1,37 @@
+task,optimizer,seed,best_reward,best_nmse,best_expr
+feynman_I_10_7,rspg,0,-0.032666,0.022666,x0
+feynman_I_10_7,rspg,1,-0.032666,0.022666,x0
+feynman_I_10_7,rspg,2,-0.032666,0.022666,x0
+feynman_I_10_7,reinforce,0,-0.032666,0.022666,x0
+feynman_I_10_7,reinforce,1,-0.032666,0.022666,x0
+feynman_I_10_7,reinforce,2,-0.032666,0.022666,x0
+feynman_I_10_7,ppo,0,-0.032666,0.022666,x0
+feynman_I_10_7,ppo,1,-0.032666,0.022666,x0
+feynman_I_10_7,ppo,2,-0.032666,0.022666,x0
+feynman_I_11_19,rspg,0,-0.977786,0.917786,((x0 + exp(pi)) + x3)
+feynman_I_11_19,rspg,1,-0.562921,0.452921,((x3 * x0) + ((x1 * (2.0 / 0.5)) + x2))
+feynman_I_11_19,rspg,2,-1.010000,1.000000,1
+feynman_I_11_19,reinforce,0,-1.000000,1.000000,((log((exp((x5 / (((x3 pow pi) pow (pi / (exp(x5) - pi))) - (2.0 - 2.0)))) pow x3)) / 2.0) pow x5)
+feynman_I_11_19,reinforce,1,-0.913591,0.873591,(exp(pi) + x2)
+feynman_I_11_19,reinforce,2,-1.000000,1.000000,INVALID_EXPRESSION
+feynman_I_11_19,ppo,0,-0.935059,0.895059,(exp(pi) + x0)
+feynman_I_11_19,ppo,1,-1.000000,1.000000,INVALID_EXPRESSION
+feynman_I_11_19,ppo,2,-1.010000,1.000000,1
+feynman_I_12_1,rspg,0,-0.291396,0.231396,(x1 * (log(x0) + 2.0))
+feynman_I_12_1,rspg,1,-0.030000,0.000000,(x0 * x1)
+feynman_I_12_1,rspg,2,-0.473642,0.443642,(x0 * pi)
+feynman_I_12_1,reinforce,0,-0.030000,0.000000,(x0 * x1)
+feynman_I_12_1,reinforce,1,-0.411300,0.241300,(log((1.0 + exp(((3.0 * x0) / exp(exp(log((0.5 + sin(2.0))))))))) * x1)
+feynman_I_12_1,reinforce,2,-0.030000,0.000000,(x1 * x0)
+feynman_I_12_1,ppo,0,-0.030000,0.000000,(x0 * x1)
+feynman_I_12_1,ppo,1,-0.030000,0.000000,(x1 * x0)
+feynman_I_12_1,ppo,2,-0.030000,0.000000,(x1 * x0)
+feynman_I_12_11,rspg,0,-0.958514,0.908514,(x1 / (x4 / 3.0))
+feynman_I_12_11,rspg,1,-0.833972,0.793972,(exp(pi) / x4)
+feynman_I_12_11,rspg,2,-1.000000,1.000000,INVALID_EXPRESSION
+feynman_I_12_11,reinforce,0,-0.974069,0.894069,exp(((2.0 pow x2) pow cos(sqrt(x4))))
+feynman_I_12_11,reinforce,1,-0.833972,0.793972,(exp(pi) / x4)
+feynman_I_12_11,reinforce,2,-0.950810,0.910810,exp((x1 / x4))
+feynman_I_12_11,ppo,0,-0.997321,0.957321,(2.0 / sin(x4))
+feynman_I_12_11,ppo,1,-0.833972,0.793972,(exp(pi) / x4)
+feynman_I_12_11,ppo,2,-0.926272,0.886272,exp((x3 / x4))

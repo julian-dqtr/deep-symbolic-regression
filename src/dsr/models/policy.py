@@ -29,7 +29,7 @@ class DeepSetsEncoder(nn.Module):
 
 
 class SymbolicPolicy(nn.Module):
-    def __init__(self, vocab_size: int):
+    def __init__(self, vocab_size: int, max_num_features: int = 10):
         super().__init__()
 
         self.vocab_size = vocab_size
@@ -51,7 +51,13 @@ class SymbolicPolicy(nn.Module):
             batch_first=True,
         )
 
-        self.dataset_encoder = None
+        # Build dataset encoder upfront so Adam sees all parameters from the start.
+        # max_num_features covers the largest dataset in the grammar config.
+        self.dataset_encoder = DeepSetsEncoder(
+            input_dim=max_num_features + 1,
+            hidden_dim=self.dataset_embedding_dim,
+            output_dim=self.dataset_embedding_dim,
+        )
 
         self.state_mlp = nn.Sequential(
             nn.Linear(self.hidden_dim + self.dataset_embedding_dim + 2, self.hidden_dim),
@@ -66,14 +72,6 @@ class SymbolicPolicy(nn.Module):
 
     def set_dataset_embedding(self, x: torch.Tensor, y: torch.Tensor):
         self.cached_dataset_embedding = self.encode_dataset(x, y).detach()
-
-    def _build_dataset_encoder_if_needed(self, num_features: int):
-        if self.dataset_encoder is None:
-            self.dataset_encoder = DeepSetsEncoder(
-                input_dim=num_features + 1,
-                hidden_dim=self.dataset_embedding_dim,
-                output_dim=self.dataset_embedding_dim,
-            ).to(self.token_embedding.weight.device)
 
     def encode_tokens(self, token_ids: torch.Tensor) -> torch.Tensor:
         is_1d = token_ids.dim() == 1
@@ -96,7 +94,12 @@ class SymbolicPolicy(nn.Module):
         if y.dim() == 1:
             y = y.unsqueeze(-1)
 
-        self._build_dataset_encoder_if_needed(num_features=x.shape[1])
+        # Pad x columns to match the fixed input_dim the encoder was built with
+        expected_features = self.dataset_encoder.phi[0].in_features - 1
+        if x.shape[1] < expected_features:
+            pad = torch.zeros(x.shape[0], expected_features - x.shape[1], device=x.device, dtype=x.dtype)
+            x = torch.cat([x, pad], dim=1)
+
         return self.dataset_encoder(x, y)
 
     def forward(
