@@ -7,33 +7,6 @@ on the Feynman SR benchmark.
 gplearn is the standard open-source SR baseline used in DSR (Petersen et al., 2021)
 and most subsequent papers. Including it anchors your results in the literature
 and makes the comparison honest — even if RSPG loses on some tasks.
-
-Install
--------
-pip install gplearn
-
-Usage
------
-# Quick — 4 subset tasks, default gplearn settings:
-python -m dsr.baselines.baseline_gplearn \
-    --suite pmlb_feynman_subset
-
-# Against your best RSPG results (no re-training needed):
-python -m dsr.baselines.baseline_gplearn \
-    --suite pmlb_feynman_subset \
-    --rspg_csv results/true_vs_recovered_<timestamp>.csv
-
-# Explicit tasks:
-python -m dsr.baselines.baseline_gplearn \
-    --tasks feynman_I_8_14 feynman_I_10_7 feynman_I_12_1 feynman_I_12_11
-
-Output
-------
-results/
-  gplearn_comparison_<timestamp>.csv   <- per-task metrics for both methods
-  plots/
-    gplearn_vs_rspg_barplot.png        <- side-by-side NMSE comparison
-    gplearn_vs_rspg_heatmap.png        <- winner per task × difficulty
 """
 
 import argparse

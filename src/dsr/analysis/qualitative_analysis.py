@@ -2,31 +2,6 @@
 qualitative_analysis.py
 =======================
 Qualitative analysis of successes and failures on the Feynman SR benchmark.
-
-Answers the question asked by the professor:
-  "Why do some formulas get recovered and others not?"
-
-Analyses three dimensions:
-  1. Number of variables     — more variables = harder?
-  2. Expression depth        — deeply nested functions harder to recover?
-  3. Function families       — which operators (sin, exp, sqrt, ...) cause failures?
-
-Input: a true_vs_recovered CSV produced by evaluate_expressions.py.
-
-Usage
------
-python -m dsr.analysis.qualitative_analysis \
-    --csv results/true_vs_recovered_<timestamp>.csv
-
-Output
-------
-results/
-  qualitative_analysis_<timestamp>.csv   <- per-task feature table
-  plots/
-    qual_by_num_vars.png     <- NMSE vs number of variables
-    qual_by_depth.png        <- NMSE vs expression depth
-    qual_by_operator.png     <- success rate per operator family
-    qual_success_table.png   <- annotated table of best/worst cases
 """
 
 import argparse

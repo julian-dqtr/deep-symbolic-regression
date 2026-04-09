@@ -1,25 +1,3 @@
-"""
-dsr/tests/test_core.py
-======================
-Unit tests for the RSPG symbolic regression system.
-
-Run with:
-    python -m dsr.tests.test_core
-
-Or run a specific test class:
-    python -m dsr.tests.test_core TestGrammar
-    python -m dsr.tests.test_core TestPrefixEvaluator
-
-Coverage:
-  - Grammar construction and token properties
-  - PrefixEvaluator: basic ops, constants, const ordering, invalid exprs
-  - SymbolicRegressionEnv: step logic, valid_action_mask, reward computation
-  - TopKMemory / DiverseTopKMemory: insertion, capacity, diversity
-  - collect_batched_episodes: rewards contract (empty until filled by Trainer)
-  - MDL reward: monotonicity, invalid guard
-  - Expression utilities: is_complete_prefix, prefix_to_infix, safe_prefix_to_infix
-"""
-
 import math
 import unittest
 

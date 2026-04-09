@@ -1,28 +1,3 @@
-"""
-compare_optimizers.py
-=====================
-Compares three RL optimizers (RSPG, REINFORCE, PPO) on a set of Feynman tasks.
-
-Usage
------
-# Quick test on 3 tasks, 2000 episodes:
-python -m dsr.training.compare_optimizers --tasks feynman_I_8_14 feynman_I_10_7 feynman_I_12_1
-
-# Full Feynman subset with custom budget:
-python -m dsr.training.compare_optimizers \
-    --suite pmlb_feynman_subset \
-    --num_episodes 5000 \
-    --num_seeds 3
-
-Output
-------
-results/
-  optimizer_comparison_<timestamp>.csv   <- raw per-task per-optimizer metrics
-  plots/
-    convergence_<task>.png               <- reward curves (3 optimizers overlaid)
-    summary_barplot.png                  <- best reward per optimizer, aggregated
-"""
-
 import argparse
 import os
 import random

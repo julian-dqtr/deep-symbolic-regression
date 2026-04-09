@@ -9,12 +9,6 @@ Source: Udrescu & Tegmark (2020) — AI Feynman: A Physics-Inspired Method for
 Variables are named as in the original paper (m_0, v, c, etc.) and mapped to
 PMLB column order (x0, x1, x2, ...) based on the variable listing in the table.
 
-IMPORTANT: This replaces the hand-written FEYNMAN_GROUND_TRUTH dict in
-evaluate_expressions.py and baseline_gplearn.py, which contained many errors.
-Import from this module instead:
-
-    from ..data.feynman_ground_truth import FEYNMAN_GROUND_TRUTH, DIFF_ORDER
-
 Difficulty classification:
   Easy   — ≤3 variables, polynomial or simple ratio structure
   Medium — 3-5 variables, one non-linear function (sqrt, trig, exp)

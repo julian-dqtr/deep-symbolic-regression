@@ -1,35 +1,3 @@
-"""
-tune_lstm.py
-============
-Hyperparameter study for the LSTM policy network using Optuna.
-
-Search space
-------------
-  hidden_dim            : {128, 256, 512}          (1024 removed — OOM on ≤6GB GPU)
-  num_lstm_layers       : {1, 2, 3}
-  token_embedding_dim   : {32, 64, 128}
-  dataset_embedding_dim : {32, 64, 128}
-
-Usage
------
-python -m dsr.training.tune_lstm \
-    --tasks feynman_I_8_14 feynman_I_10_7 feynman_I_12_11 \
-    --n_trials 20 --num_episodes 2000
-
-python -m dsr.training.tune_lstm \
-    --suite pmlb_feynman_subset \
-    --n_trials 50 --num_episodes 3000
-
-Output
-------
-results/
-  lstm_tuning_<timestamp>.csv
-  plots/
-    lstm_importance.png
-    lstm_parallel.png
-    lstm_history.png
-"""
-
 import argparse
 import csv
 import os

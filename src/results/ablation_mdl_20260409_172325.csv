@@ -1,0 +1,8 @@
+task,variant,seed,best_nmse,best_complexity,best_expr,quality,linear_reward,mdl_reward_val,L_model_bits,L_data_bits,L_total_bits
+feynman_I_10_7,linear,0,0.0176352821290493,1,x0,Good,-0.027635,0.502522,4.25,-54.5,-50.25
+feynman_I_10_7,linear,1,0.0176352821290493,1,x0,Good,-0.027635,0.502522,4.25,-54.5,-50.25
+feynman_I_10_7,linear,2,0.0176352821290493,1,x0,Good,-0.027635,0.502522,4.25,-54.5,-50.25
+feynman_I_10_7,mdl,0,0.009761209599673748,4,(sin(3.0) + x0),Good,-0.049761,0.801751,16.99,-97.17,-80.18
+feynman_I_10_7,mdl,1,0.009761209599673748,4,(x0 + sin(3.0)),Good,-0.049761,0.801751,16.99,-97.17,-80.18
+feynman_I_10_7,mdl,2,0.007114836480468512,5,(x0 + (1 / x2)),Good,-0.057115,0.667386,53.24,-119.98,-66.74
+feynman_I_11_19,linear,0,1.0,24,((log((exp((x5 / (((x3 pow pi) pow (pi / (exp(x5) - pi))) - (2.0 - 2.0)))) pow x3)) / 2.0) pow x5),Poor,-1.24,-6.38393,107.03,531.37,638.39
