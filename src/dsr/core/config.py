@@ -7,8 +7,11 @@ ENV_CONFIG = {
 }
 
 GRAMMAR_CONFIG = {
-    "binary_operators": ["+", "-", "*", "/"],
-    "unary_operators": ["sin", "cos", "exp", "log"],
+    # Binary operators — pow (x^y) added for Nguyen-11 and polynomial tasks
+    "binary_operators": ["+", "-", "*", "/", "pow"],
+    # Unary operators — sqrt added for Nguyen-8
+    # Both are protected: sqrt(|x|), pow(|a|, b) to avoid domain errors
+    "unary_operators": ["sin", "cos", "exp", "log", "sqrt"],
     "constants": {
         "1.0": 1.0,
         "0.5": 0.5,
@@ -21,10 +24,10 @@ GRAMMAR_CONFIG = {
 }
 
 MODEL_CONFIG = {
-    "token_embedding_dim": 64,
-    "hidden_dim": 512,
-    "dataset_embedding_dim": 64,
-    "num_lstm_layers": 2,
+    "token_embedding_dim":   32,
+    "hidden_dim":            256,
+    "dataset_embedding_dim": 32,
+    "num_lstm_layers":       2,
 }
 
 TRAINING_CONFIG = {
@@ -35,4 +38,3 @@ TRAINING_CONFIG = {
     "optimizer_name": "adam",
     "grad_clip_norm": 1.0,
 }
-

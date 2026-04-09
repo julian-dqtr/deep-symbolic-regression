@@ -1,0 +1,5 @@
+task,difficulty,true_expression,sampling_nmse,sampling_expr,mcts_nmse,mcts_expr,improvement,winner,num_simulations,n_visited
+feynman_I_10_7,Medium,m_0/sqrt(1-v**2/c**2),0.034866,x0,0.027388889342546463,x0,0.007477,mcts,200,200
+feynman_I_11_19,Easy,x1*y1+x2*y2+x3*y3,0.873929,((x4 + x2) + exp(pi)),1.0,,-0.126071,sampling,200,0
+feynman_I_12_1,Easy,mu*Nn,0.0,(x0 * x1),0.0,(x0 * x1),0.0,sampling,200,0
+feynman_I_12_11,Medium,q*(Ef+B*v*sin(theta)),0.773897,(exp((exp(cos(log(exp(((log(1) pow 0.5) / 1))))) pow sin(x4))) + exp(1.0)),0.8479055762290955,(exp(3.0) / x4),-0.074009,sampling,200,200

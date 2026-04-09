@@ -1,0 +1,13 @@
+task,difficulty,num_vars,expr_depth,n_special_ops,operators,has_exp,has_trig,has_log,has_sqrt,has_arcsin,has_lorentz,true_expression,recovered_expression,nmse,quality
+nguyen_8,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,sqrt(x0),0.0,Perfect
+nguyen_11,Unknown,2,0,0,none,0,0,0,0,0,0,unknown,(x0 pow x1),0.0,Perfect
+nguyen_9,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,((x0 + 1) * sin(x0)),0.000444,Perfect
+nguyen_1,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,(((x0 + 2.0) pow x0) * x0),0.003509,Good
+nguyen_7,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,(x0 / sqrt(0.5)),0.004747,Good
+nguyen_6,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,(sin(sin(x0)) * (x0 + 2.0)),0.013238,Good
+nguyen_4,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,(exp((x0 + x0)) * sin(sin(x0))),0.016617,Good
+nguyen_2,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,((exp(x0) * sqrt(2.0)) * x0),0.02734,Good
+nguyen_3,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,(exp((0.5 + x0)) * x0),0.027482,Good
+nguyen_10,Unknown,2,0,0,none,0,0,0,0,0,0,unknown,(sqrt(2.0) * x0),0.034854,Good
+nguyen_5,Unknown,1,0,0,none,0,0,0,0,0,0,unknown,cos((pi - x0)),0.228705,Poor
+nguyen_12,Unknown,2,0,0,none,0,0,0,0,0,0,unknown,((cos(cos(sin(3.0))) pow (x0 + 1)) - x1),0.283163,Poor
