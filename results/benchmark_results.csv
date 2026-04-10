@@ -1,5 +1,0 @@
-task,target,random_reward,random_nmse,random_expr,ppo_reward,ppo_nmse,ppo_expr,beam_reward,beam_nmse,beam_expr,winner
-x,x0,-0.01,0.0,x0,-0.01,0.0,x0,-0.01,0.0,x0,RANDOM
-x_plus_1,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),RANDOM
-x_squared,(x0 * x0),-0.3868033576011658,0.35680335760116577,exp(log(x0)),-0.1292957842350006,0.07929578423500061,sin((x0 * sin(x0))),-1.01,1.0,1.0,PPO_SAMPLING
-sin_x,sin(x0),-0.02,0.0,sin(x0),-0.02,0.0,sin(x0),-0.02,0.0,sin(x0),RANDOM

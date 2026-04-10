@@ -4,7 +4,7 @@ import numpy as np
 
 from .grammar import Grammar
 from .evaluator import PrefixEvaluator
-from ..config import ENV_CONFIG
+from .config import ENV_CONFIG
 
 
 @dataclass
@@ -107,14 +107,61 @@ class SymbolicRegressionEnv:
             "tokens": list(self.tokens),
             "pending_slots": self.pending_slots,
             "length": len(self.tokens),
-            # "X": self.X,
-            # "y": self.y,
         }
     
     def valid_action_mask(self) -> np.ndarray:
-        mask = np.ones(len(self.grammar), dtype=np.float32)
+        """
+        Intelligent action mask that filters grammatically invalid tokens.
+
+        Three rules applied simultaneously:
+
+        1. Done guard: if episode is finished, all actions are masked.
+
+        2. Length constraint: a token is valid only if the expression can
+           still be completed within max_length after choosing it.
+           Choosing a binary op (+, *, ...) adds 1 pending slot; a unary op
+           leaves pending_slots unchanged; a terminal closes 1 slot.
+           After choosing token t:
+               new_pending = pending_slots - 1 + arity(t)
+           The minimum tokens needed to complete new_pending slots is
+           new_pending (one terminal per slot). So token t is valid iff:
+               len(tokens) + 1 + new_pending <= max_length
+           i.e.  new_pending <= max_length - len(tokens) - 1
+
+        3. Completability: if only 1 slot remains (pending_slots == 1),
+           only terminals are allowed — any operator would open more slots
+           that cannot all be closed before max_length is reached (rule 2
+           already handles this, but making it explicit improves clarity).
+
+        Result: the policy never wastes episodes on expressions that are
+        guaranteed to be invalid or truncated.
+        """
+        mask = np.zeros(len(self.grammar), dtype=np.float32)
 
         if self.done or self.pending_slots == 0:
-            mask[:] = 0.0
+            return mask  # all zeros
+
+        remaining = self.max_length - len(self.tokens) - 1  # slots after this token
+
+        for i, token in enumerate(self.grammar.action_space):
+            arity       = self.grammar.arity[token]
+            new_pending = self.pending_slots - 1 + arity
+
+            # Rule 1: new_pending must be non-negative
+            if new_pending < 0:
+                continue
+
+            # Rule 2: must be completable within remaining length
+            # Need at least new_pending more tokens (one terminal per slot)
+            if new_pending > remaining:
+                continue
+
+            mask[i] = 1.0
+
+        # Safety: if nothing is valid (edge case), allow all terminals
+        if mask.sum() == 0:
+            for i, token in enumerate(self.grammar.action_space):
+                if self.grammar.arity[token] == 0:
+                    mask[i] = 1.0
 
         return mask

@@ -1,0 +1,61 @@
+task,variant,seed,best_reward,best_nmse,best_expr,memory_mean_pairwise_dist,memory_min_pairwise_dist
+feynman_I_10_7,full,0,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,full,1,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,full,2,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_curriculum,0,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_curriculum,1,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_curriculum,2,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_diverse_memory,0,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_diverse_memory,1,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_diverse_memory,2,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,no_prioritized_replay,0,-0.03515837922692299,0.02515837922692299,x0,5.7894736842105265,2
+feynman_I_10_7,no_prioritized_replay,1,-0.03515837922692299,0.02515837922692299,x0,5.226315789473684,2
+feynman_I_10_7,no_prioritized_replay,2,-0.03515837922692299,0.02515837922692299,x0,7.5473684210526315,3
+feynman_I_10_7,baseline,0,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,baseline,1,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_10_7,baseline,2,-0.03515837922692299,0.02515837922692299,x0,0.0,0
+feynman_I_11_19,full,0,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,full,1,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,full,2,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,no_curriculum,0,-1.0,1.0,((log((exp((x5 / (((x3 pow pi) pow (pi / (exp(x5) - pi))) - (2.0 - 2.0)))) pow x3)) / 2.0) pow x5),0.0,0
+feynman_I_11_19,no_curriculum,1,-0.5629207050800323,0.45292070508003235,((x3 * x0) + ((x1 * (2.0 / 0.5)) + x2)),0.0,0
+feynman_I_11_19,no_curriculum,2,-1.01,1.0,1,0.0,0
+feynman_I_11_19,no_diverse_memory,0,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,no_diverse_memory,1,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,no_diverse_memory,2,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_11_19,no_prioritized_replay,0,-1.0,1.0,INVALID_EXPRESSION,4.442105263157894,3
+feynman_I_11_19,no_prioritized_replay,1,-1.0,1.0,INVALID_EXPRESSION,4.605263157894737,3
+feynman_I_11_19,no_prioritized_replay,2,-1.0,1.0,INVALID_EXPRESSION,5.1947368421052635,3
+feynman_I_11_19,baseline,0,-1.0,1.0,((log((exp((x5 / (((x3 pow pi) pow (pi / (exp(x5) - pi))) - (2.0 - 2.0)))) pow x3)) / 2.0) pow x5),0.0,0
+feynman_I_11_19,baseline,1,-0.5629207050800323,0.45292070508003235,((x3 * x0) + ((x1 * (2.0 / 0.5)) + x2)),0.0,0
+feynman_I_11_19,baseline,2,-1.01,1.0,1,0.0,0
+feynman_I_12_1,full,0,-0.050000000000019675,1.9671960729220755e-14,(x1 * (1.0 * x0)),0.0,0
+feynman_I_12_1,full,1,-0.6155627655982971,0.5855627655982971,(3.0 * x1),0.0,0
+feynman_I_12_1,full,2,-0.6391998910903931,0.5991998910903931,(x0 pow sqrt(pi)),0.0,0
+feynman_I_12_1,no_curriculum,0,-0.29139606416225433,0.23139606416225433,(x1 * (log(x0) + 2.0)),0.0,0
+feynman_I_12_1,no_curriculum,1,-0.07000000000001969,1.9671960729220755e-14,(1 * ((x0 * 1) * x1)),0.0,0
+feynman_I_12_1,no_curriculum,2,-0.5923645973205567,0.5423645973205566,exp((2.0 pow log(x0))),0.0,0
+feynman_I_12_1,no_diverse_memory,0,-0.050000000000019675,1.9671960729220755e-14,(x1 * (1.0 * x0)),0.0,0
+feynman_I_12_1,no_diverse_memory,1,-0.6155627655982971,0.5855627655982971,(3.0 * x1),0.0,0
+feynman_I_12_1,no_diverse_memory,2,-0.6391998910903931,0.5991998910903931,(x0 pow sqrt(pi)),0.0,0
+feynman_I_12_1,no_prioritized_replay,0,-0.050000000000019675,1.9671960729220755e-14,(x1 * (1.0 * x0)),4.815789473684211,3
+feynman_I_12_1,no_prioritized_replay,1,-0.6155627655982971,0.5855627655982971,(3.0 * x1),4.521052631578947,3
+feynman_I_12_1,no_prioritized_replay,2,-0.6391998910903931,0.5991998910903931,(x0 pow sqrt(pi)),4.447368421052632,3
+feynman_I_12_1,baseline,0,-0.29139606416225433,0.23139606416225433,(x1 * (log(x0) + 2.0)),0.0,0
+feynman_I_12_1,baseline,1,-0.07000000000001969,1.9671960729220755e-14,(1 * ((x0 * 1) * x1)),0.0,0
+feynman_I_12_1,baseline,2,-0.5923645973205567,0.5423645973205566,exp((2.0 pow log(x0))),0.0,0
+feynman_I_12_11,full,0,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_12_11,full,1,-0.8339724922180176,0.7939724922180176,(exp(pi) / x4),0.0,0
+feynman_I_12_11,full,2,-0.762862184047699,0.722862184047699,exp(exp(sin(x4))),0.0,0
+feynman_I_12_11,no_curriculum,0,-0.9825987696647644,0.9325987696647644,(x1 / (x4 / x3)),0.0,0
+feynman_I_12_11,no_curriculum,1,-0.8339724922180176,0.7939724922180176,(exp(pi) / x4),0.0,0
+feynman_I_12_11,no_curriculum,2,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_12_11,no_diverse_memory,0,-1.0,1.0,INVALID_EXPRESSION,0.0,0
+feynman_I_12_11,no_diverse_memory,1,-0.8339724922180176,0.7939724922180176,(exp(pi) / x4),0.0,0
+feynman_I_12_11,no_diverse_memory,2,-0.762862184047699,0.722862184047699,exp(exp(sin(x4))),0.0,0
+feynman_I_12_11,no_prioritized_replay,0,-1.0,1.0,INVALID_EXPRESSION,4.505263157894737,3
+feynman_I_12_11,no_prioritized_replay,1,-0.8339724922180176,0.7939724922180176,(exp(pi) / x4),4.5473684210526315,3
+feynman_I_12_11,no_prioritized_replay,2,-0.762862184047699,0.722862184047699,exp(exp(sin(x4))),4.568421052631579,3
+feynman_I_12_11,baseline,0,-0.9825987696647644,0.9325987696647644,(x1 / (x4 / x3)),0.0,0
+feynman_I_12_11,baseline,1,-0.8339724922180176,0.7939724922180176,(exp(pi) / x4),0.0,0
+feynman_I_12_11,baseline,2,-1.0,1.0,INVALID_EXPRESSION,0.0,0

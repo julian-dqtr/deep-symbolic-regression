@@ -63,7 +63,10 @@ def prefix_to_tree(tokens: List[str], grammar: Grammar) -> ExprNode:
 
 
 def _tree_to_infix(node: ExprNode, grammar: Grammar) -> str:
-    arity = grammar.arity[node.token]
+    # Use .get(..., 0) so that tokens replaced by replace_consts in
+    # safe_prefix_to_infix (e.g. "3.1416") are treated as terminals
+    # even though they are not in grammar.arity.
+    arity = grammar.arity.get(node.token, 0)
 
     if arity == 0:
         return node.token
@@ -88,8 +91,24 @@ def prefix_to_infix(tokens: List[str], grammar: Grammar) -> str:
     return _tree_to_infix(tree, grammar)
 
 
-def safe_prefix_to_infix(tokens: List[str], grammar: Grammar) -> str:
+def safe_prefix_to_infix(tokens: List[str], grammar: Grammar, optimized_constants: List[float] = None) -> str:
     try:
-        return prefix_to_infix(tokens, grammar)
+        if len(tokens) == 0:
+            return "<empty>"
+        
+        tree = prefix_to_tree(tokens, grammar)
+        
+        if optimized_constants:
+            c_idx = [0]
+            def replace_consts(node):
+                if node.token == "const":
+                    if c_idx[0] < len(optimized_constants):
+                        node.token = f"{optimized_constants[c_idx[0]]:.4g}"
+                        c_idx[0] += 1
+                for child in node.children:
+                    replace_consts(child)
+            replace_consts(tree)
+            
+        return _tree_to_infix(tree, grammar)
     except Exception:
         return "INVALID_EXPRESSION"
