@@ -21,14 +21,14 @@ We study symbolic regression as an RL task in which an agent learns to discover 
 Each episode corresponds to constructing a single mathematical expression for a fixed dataset.
 
 - **State:** Partially constructed expression in prefix notation + permutation-invariant dataset embedding (DeepSets encoder).
-- **Action space:** Discrete grammar tokens — variables `{x0, …, x9}`, binary operators `{+, −, ×, ÷, pow}`, unary operators `{sin, cos, exp, log, sqrt}`, constants `{0.5, 1.0, 2.0, 3.0, π}`, and a learnable `const` placeholder.
+- **Action space:** Discrete grammar tokens, variables `{x0, …, x9}`, binary operators `{+, −, ×, ÷, pow}`, unary operators `{sin, cos, exp, log, sqrt}`, constants `{0.5, 1.0, 2.0, 3.0, π}`, and a learnable `const` placeholder.
 - **Grammar-aware action mask:** At each step, a binary mask filters tokens that would make the expression impossible to complete within the length budget. A token is valid iff the resulting pending slot count stays non-negative AND the expression can still be completed within `max_length = 30`. This eliminates structurally invalid actions before the policy sees them.
 - **Terminal reward:** `R(e) = −NMSE(e) − α·|e|`, with `α = 0.01`.
 
 ### Agent
 
 - **LSTM policy:** 2-layer LSTM (hidden dim 256) autoregressively generating grammar tokens, conditioned on a DeepSets dataset embedding at each step.
-- **DeepSets encoder:** Each `(x_i, y_i)` point is independently encoded by an MLP, then aggregated by sum-pooling — producing a permutation-invariant context vector.
+- **DeepSets encoder:** Each `(x_i, y_i)` point is independently encoded by an MLP, then aggregated by sum-pooling, producing a permutation-invariant context vector.
 - **Vectorised batched rollouts:** 256 expression trees generated simultaneously via PyTorch tensor operations, bypassing Python environment loops (~10× speed-up).
 - **Risk-Seeking Policy Gradient (RSPG):** Only the top 5% quantile of sampled expressions per batch contributes to the gradient update.
 - **Top-K memory replay:** The best 20 expressions ever found are stored in a min-heap and re-injected into every gradient update via teacher forcing (preventing catastrophic forgetting).
@@ -37,8 +37,8 @@ Each episode corresponds to constructing a single mathematical expression for a 
 ### Original Contributions
 
 - **Curriculum learning:** Maximum expression length is linearly ramped from 5 to 30 over the first 50% of training episodes, preventing early exploration of overly complex expressions.
-- **DiverseTopKMemory:** Extends Top-K memory with a token-level Levenshtein edit-distance filter — a new expression is rejected if it is structurally too similar to an already stored one (threshold: 3 edits), preventing memory collapse onto near-identical expressions.
-- **PrioritizedTopKMemory:** Expressions are replayed in order of "surprise" — `|reward − baseline|^α` — focusing gradient updates on the most informative past experience (inspired by Schaul et al., 2016).
+- **DiverseTopKMemory:** Extends Top-K memory with a token-level Levenshtein edit-distance filter, a new expression is rejected if it is structurally too similar to an already stored one (threshold: 3 edits), preventing memory collapse onto near-identical expressions.
+- **PrioritizedTopKMemory:** Expressions are replayed in order of "surprise", `|reward − baseline|^α`, focusing gradient updates on the most informative past experience (inspired by Schaul et al., 2016).
 - **MDL reward:** A theoretically grounded Minimum Description Length alternative to the hand-tuned linear complexity penalty.
 
 ---
@@ -70,11 +70,11 @@ Six tasks recovered at machine precision (NMSE ≈ 0): `I.12.1` (μNₙ), `I.12.
 
 ### Key Findings
 
-- **DeepSets is necessary:** Removing the dataset encoder causes the reward curve to stay flat throughout training — the policy cannot learn without dataset conditioning.
+- **DeepSets is necessary:** Removing the dataset encoder causes the reward curve to stay flat throughout training, the policy cannot learn without dataset conditioning.
 - **BFGS is the most impactful component:** Mean NMSE increases from 0.503 (full) to 0.562 (−BFGS), the largest delta of any ablated component.
 - **Curriculum learning** is the clearest of the three original contributions: the −Curriculum variant achieves systematically lower rewards on harder tasks.
 - **gplearn comparison:** Genetic programming (gplearn, population 1000, 20 generations) outperforms RSPG on 93/119 Feynman tasks (mean NMSE 0.183 vs 0.418), primarily due to broader exploration diversity. RSPG is competitive on moderate-complexity tasks requiring precise constant tuning.
-- **Beam search and MCTS** do not consistently improve results and can degrade perfect solutions — the quality of the learned policy is the true bottleneck.
+- **Beam search and MCTS** do not consistently improve results and can degrade perfect solutions, the quality of the learned policy is the true bottleneck.
 
 ---
 
