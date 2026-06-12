@@ -1,9 +1,10 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.distributions import Categorical
 
-from ..config import TRAINING_CONFIG
+from ..core.config import TRAINING_CONFIG
 
 
 class PPOOptimizer:
@@ -25,24 +26,44 @@ class PPOOptimizer:
         returns = [final_reward for _ in rewards]
         return torch.tensor(returns, dtype=torch.float32)
 
-    def update(self, episode):
-        if len(episode["log_probs"]) == 0:
+    def update(self, batch_episodes):
+        valid_episodes = [ep for ep in batch_episodes if len(ep["log_probs"]) > 0]
+        if not valid_episodes:
             return {
                 "loss": 0.0,
                 "policy_loss": 0.0,
                 "value_loss": 0.0,
                 "entropy": 0.0,
-                "final_reward": float(episode["final_reward"]),
+                "final_reward": float(np.mean([ep["final_reward"] for ep in batch_episodes])),
             }
 
-        device = episode["log_probs"][0].device
-        old_log_probs = torch.stack(episode["log_probs"]).detach()
-        old_values = torch.stack(episode["values"]).detach()
-        action_ids = torch.tensor(episode["action_ids"], dtype=torch.long, device=device)
+        device = valid_episodes[0]["log_probs"][0].device
 
-        returns = self.compute_returns(episode["rewards"]).to(device)
-        advantages = returns - old_values
-        advantages = advantages.detach()
+        all_old_log_probs = []
+        all_old_values = []
+        all_action_ids = []
+        all_returns = []
+        all_observations = []
+
+        for episode in valid_episodes:
+            old_log_probs = torch.stack(episode["log_probs"]).detach()
+            old_values = torch.stack(episode["values"]).detach()
+            action_ids = torch.tensor(episode["action_ids"], dtype=torch.long, device=device)
+            returns = self.compute_returns(episode["rewards"]).to(device)
+
+            all_old_log_probs.append(old_log_probs)
+            all_old_values.append(old_values)
+            all_action_ids.append(action_ids)
+            all_returns.append(returns)
+            all_observations.extend(episode["observations"])
+
+        old_log_probs_tensor = torch.cat(all_old_log_probs)
+        old_values_tensor = torch.cat(all_old_values)
+        action_ids_tensor = torch.cat(all_action_ids)
+        returns_tensor = torch.cat(all_returns)
+
+        advantages_tensor = returns_tensor - old_values_tensor
+        advantages_tensor = advantages_tensor.detach()
 
         last_loss = None
         last_policy_loss = None
@@ -54,11 +75,9 @@ class PPOOptimizer:
             entropies_list = []
             values_list = []
 
-            for obs, action_id in zip(episode["observations"], action_ids):
+            for obs, action_id in zip(all_observations, action_ids_tensor):
                 logits, value = self.policy(
                     token_ids=obs["token_ids"],
-                    x=obs["x"],
-                    y=obs["y"],
                     pending_slots=obs["pending_slots"],
                     length=obs["length"],
                     action_mask=obs["action_mask"],
@@ -75,19 +94,19 @@ class PPOOptimizer:
             entropies = torch.stack(entropies_list)
             new_values = torch.stack(values_list)
 
-            ratios = torch.exp(new_log_probs - old_log_probs)
+            ratios = torch.exp(new_log_probs - old_log_probs_tensor)
             clipped_ratios = torch.clamp(
                 ratios,
                 1.0 - self.clip_epsilon,
                 1.0 + self.clip_epsilon,
             )
 
-            surrogate_1 = ratios * advantages
-            surrogate_2 = clipped_ratios * advantages
+            surrogate_1 = ratios * advantages_tensor
+            surrogate_2 = clipped_ratios * advantages_tensor
 
-            policy_loss = -torch.min(surrogate_1, surrogate_2).sum()
-            value_loss = nn.functional.mse_loss(new_values, returns, reduction="sum")
-            entropy_bonus = entropies.sum()
+            policy_loss = -torch.min(surrogate_1, surrogate_2).sum() / len(valid_episodes)
+            value_loss = nn.functional.mse_loss(new_values, returns_tensor, reduction="sum") / len(valid_episodes)
+            entropy_bonus = entropies.sum() / len(valid_episodes)
 
             loss = policy_loss + self.value_weight * value_loss - self.entropy_weight * entropy_bonus
 
@@ -106,5 +125,5 @@ class PPOOptimizer:
             "policy_loss": float(last_policy_loss.item()),
             "value_loss": float(last_value_loss.item()),
             "entropy": float(last_entropy.item()),
-            "final_reward": float(episode["final_reward"]),
+            "final_reward": float(np.mean([ep["final_reward"] for ep in batch_episodes])),
         }

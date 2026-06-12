@@ -36,4 +36,10 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# Data /
+# Logs
+run.log
+*.log
+
+# Generated outputs (keep CSVs, ignore PNGs produced by visualize.py)
+results/equation_*.png
+results/best_equation.png

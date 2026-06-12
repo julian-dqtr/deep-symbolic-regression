@@ -1,0 +1,13 @@
+task,difficulty,num_vars,true_expression,recovered_expression,nmse,complexity,quality,seed
+nguyen_8,Unknown,1,unknown,sqrt(x0),0.0,2,Perfect,42
+nguyen_11,Unknown,2,unknown,(x0 pow x1),0.0,3,Perfect,42
+nguyen_9,Unknown,1,unknown,((x0 + 1) * sin(x0)),0.000444,6,Perfect,42
+nguyen_1,Unknown,1,unknown,(((x0 + 2.0) pow x0) * x0),0.003509,7,Good,42
+nguyen_7,Unknown,1,unknown,(x0 / sqrt(0.5)),0.004747,4,Good,42
+nguyen_6,Unknown,1,unknown,(sin(sin(x0)) * (x0 + 2.0)),0.013238,7,Good,42
+nguyen_4,Unknown,1,unknown,(exp((x0 + x0)) * sin(sin(x0))),0.016617,8,Good,42
+nguyen_2,Unknown,1,unknown,((exp(x0) * sqrt(2.0)) * x0),0.02734,7,Good,42
+nguyen_3,Unknown,1,unknown,(exp((0.5 + x0)) * x0),0.027482,6,Good,42
+nguyen_10,Unknown,2,unknown,(sqrt(2.0) * x0),0.034854,4,Good,42
+nguyen_5,Unknown,1,unknown,cos((pi - x0)),0.228705,4,Poor,42
+nguyen_12,Unknown,2,unknown,((cos(cos(sin(3.0))) pow (x0 + 1)) - x1),0.283163,10,Poor,42

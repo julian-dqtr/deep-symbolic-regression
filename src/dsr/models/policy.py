@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from ..config import MODEL_CONFIG
+from ..core.config import MODEL_CONFIG
 
 
 class DeepSetsEncoder(nn.Module):
@@ -29,7 +29,7 @@ class DeepSetsEncoder(nn.Module):
 
 
 class SymbolicPolicy(nn.Module):
-    def __init__(self, vocab_size: int):
+    def __init__(self, vocab_size: int, max_num_features: int = 10):
         super().__init__()
 
         self.vocab_size = vocab_size
@@ -51,7 +51,13 @@ class SymbolicPolicy(nn.Module):
             batch_first=True,
         )
 
-        self.dataset_encoder = None
+        # Build dataset encoder upfront so Adam sees all parameters from the start.
+        # max_num_features covers the largest dataset in the grammar config.
+        self.dataset_encoder = DeepSetsEncoder(
+            input_dim=max_num_features + 1,
+            hidden_dim=self.dataset_embedding_dim,
+            output_dim=self.dataset_embedding_dim,
+        )
 
         self.state_mlp = nn.Sequential(
             nn.Linear(self.hidden_dim + self.dataset_embedding_dim + 2, self.hidden_dim),
@@ -62,56 +68,71 @@ class SymbolicPolicy(nn.Module):
 
         self.action_head = nn.Linear(self.hidden_dim, vocab_size)
         self.value_head = nn.Linear(self.hidden_dim, 1)
+        self.cached_dataset_embedding = None
 
-    def _build_dataset_encoder_if_needed(self, num_features: int):
-        if self.dataset_encoder is None:
-            self.dataset_encoder = DeepSetsEncoder(
-                input_dim=num_features + 1,
-                hidden_dim=self.dataset_embedding_dim,
-                output_dim=self.dataset_embedding_dim,
-            ).to(self.token_embedding.weight.device)
+    def set_dataset_embedding(self, x: torch.Tensor, y: torch.Tensor):
+        self.cached_dataset_embedding = self.encode_dataset(x, y).detach()
 
     def encode_tokens(self, token_ids: torch.Tensor) -> torch.Tensor:
+        is_1d = token_ids.dim() == 1
+        
         if token_ids.numel() == 0:
             device = self.token_embedding.weight.device
+            if not is_1d and token_ids.dim() == 2:
+                B = token_ids.size(0)
+                return torch.zeros(B, self.hidden_dim, device=device)
             return torch.zeros(self.hidden_dim, device=device)
 
-        if token_ids.dim() == 1:
-            token_ids = token_ids.unsqueeze(0)
-
-        embedded = self.token_embedding(token_ids)
+        inputs = token_ids.unsqueeze(0) if is_1d else token_ids
+        embedded = self.token_embedding(inputs)
         _, (h_n, _) = self.sequence_encoder(embedded)
-        return h_n[-1, 0, :]
+        
+        out = h_n[-1]
+        return out[0] if is_1d else out
 
     def encode_dataset(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         if y.dim() == 1:
             y = y.unsqueeze(-1)
 
-        self._build_dataset_encoder_if_needed(num_features=x.shape[1])
+        # Pad x columns to match the fixed input_dim the encoder was built with
+        expected_features = self.dataset_encoder.phi[0].in_features - 1
+        if x.shape[1] < expected_features:
+            pad = torch.zeros(x.shape[0], expected_features - x.shape[1], device=x.device, dtype=x.dtype)
+            x = torch.cat([x, pad], dim=1)
+
         return self.dataset_encoder(x, y)
 
     def forward(
         self,
         token_ids: torch.Tensor,
-        x: torch.Tensor,
-        y: torch.Tensor,
-        pending_slots: int,
-        length: int,
+        pending_slots,
+        length,
         action_mask: torch.Tensor | None = None,
+        x: torch.Tensor | None = None,
+        y: torch.Tensor | None = None,
     ):
         seq_embedding = self.encode_tokens(token_ids)
-        dataset_embedding = self.encode_dataset(x, y)
+        
+        if self.cached_dataset_embedding is not None:
+            dataset_embedding = self.cached_dataset_embedding
+        else:
+            dataset_embedding = self.encode_dataset(x, y)
 
-        scalar_features = torch.tensor(
-            [float(pending_slots), float(length)],
-            dtype=torch.float32,
-            device=token_ids.device,
-        )
-
-        state_vector = torch.cat(
-            [seq_embedding, dataset_embedding, scalar_features],
-            dim=0,
-        )
+        if isinstance(pending_slots, int) or (isinstance(pending_slots, torch.Tensor) and pending_slots.dim() == 0):
+            scalar_features = torch.tensor(
+                [float(pending_slots), float(length)],
+                dtype=torch.float32,
+                device=token_ids.device,
+            )
+            state_vector = torch.cat(
+                [seq_embedding, dataset_embedding, scalar_features],
+                dim=0,
+            )
+        else:
+            B = seq_embedding.shape[0]
+            dataset_emb_batch = dataset_embedding.unsqueeze(0).expand(B, -1)
+            scalar_features = torch.cat([pending_slots.float(), length.float()], dim=-1)
+            state_vector = torch.cat([seq_embedding, dataset_emb_batch, scalar_features], dim=-1)
 
         hidden = self.state_mlp(state_vector)
         logits = self.action_head(hidden)

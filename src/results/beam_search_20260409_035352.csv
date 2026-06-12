@@ -1,0 +1,5 @@
+task,difficulty,true_expression,sampling_nmse,sampling_expr,sampling_quality,beam_nmse,beam_expr,beam_quality,improvement,winner,beam_width
+feynman_I_10_7,Medium,m_0/sqrt(1-v**2/c**2),0.034866,x0,Good,0.016197,x0,Good,0.018669,beam,50
+feynman_I_11_19,Easy,x1*y1+x2*y2+x3*y3,0.873929,((x4 + x2) + exp(pi)),Poor,0.789767,(x0 + (x3 + exp(3.0))),Poor,0.084162,beam,50
+feynman_I_12_1,Easy,mu*Nn,0.0,(x0 * x1),Perfect,1.0,x1,Poor,-1.0,sampling,50
+feynman_I_12_11,Medium,q*(Ef+B*v*sin(theta)),0.773897,(exp((exp(cos(log(exp(((log(1) pow 0.5) / 1))))) pow sin(x4))) + exp(1.0)),Poor,1.0,3.0,Poor,-0.226103,sampling,50

@@ -1,4 +1,4 @@
-from ..config import GRAMMAR_CONFIG, ENV_CONFIG
+from .config import GRAMMAR_CONFIG, ENV_CONFIG
 from .grammar import Grammar
 
 def build_grammar(num_variables: int) -> Grammar:

@@ -1,8 +1,0 @@
-task,target,random_reward,random_nmse,random_expr,ppo_reward,ppo_nmse,ppo_expr,beam_reward,beam_nmse,beam_expr,winner
-nguyen_x,x0,-0.01,0.0,x0,-0.01,0.0,x0,-0.01,0.0,x0,RANDOM
-nguyen_x_plus_1,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),-0.03,0.0,(x0 + 1.0),RANDOM
-nguyen_x_squared,(x0 * x0),-0.3868033576011658,0.35680335760116577,exp(log(x0)),-0.03,0.0,(x0 * x0),-0.3868033576011658,0.35680335760116577,exp(log(x0)),PPO_SAMPLING
-nguyen_sin_x,sin(x0),-0.02,0.0,sin(x0),-0.02,0.0,sin(x0),-0.02,0.0,sin(x0),RANDOM
-nguyen_cos_x,cos(x0),-0.02,0.0,cos(x0),-0.02,0.0,cos(x0),-0.02,0.0,cos(x0),RANDOM
-nguyen_exp_x,exp(x0),-0.02,0.0,exp(x0),-0.02,0.0,exp(x0),-0.02,0.0,exp(x0),RANDOM
-nguyen_x_sin_x,(x0 * sin(x0)),-0.08000000001193953,1.1939532695848243e-11,((x0 / 1.0) * sin(log(exp(x0)))),-0.07479364305734634,0.044793643057346344,(x0 * x0),-1.01,1.0,x0,PPO_SAMPLING
